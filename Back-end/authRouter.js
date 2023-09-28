@@ -10,6 +10,6 @@ router.post('/registration', [
     check ('password', "Пароль должен быть более 4 и менее 10 символов").isLength({min:4, max:10})
 ], controller.registration) //вызываем функцию из контроллера authController
 router.post('/login', controller.login)
-router.get('/users', roleMiddleware(['USER', 'ADMIN']), controller.getUsers)
+router.get('/users', controller.getUsers)
 
 module.exports = router
