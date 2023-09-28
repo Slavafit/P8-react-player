@@ -1,0 +1,17 @@
+.scroll-to-top-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  
+  .scroll-to-top-button:hover {
+    opacity: 0.8;
+  }
+  

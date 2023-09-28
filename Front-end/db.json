@@ -1,0 +1,95 @@
+{
+  "users": [
+    {
+      "id": "RmYL-0i",
+      "name": "Admin",
+      "email": "slavafit@mail.ru",
+      "password": "123",
+      "role": "Admin"
+    },
+    {
+      "id": "1K1HIL0",
+      "name": "Fran",
+      "email": "frank16440@gmail.com",
+      "password": "123456",
+      "role": "User"
+    },
+    {
+      "id": "V5tVSF6",
+      "name": "Celia",
+      "email": "celia7septiembre@gmail",
+      "password": "1qazxsw2",
+      "role": "User"
+    },
+    {
+      "id": "oLWwBgK",
+      "name": "Rodrigo",
+      "email": "ramunozg@gmail.com",
+      "password": "123456",
+      "role": "User"
+    },
+    {
+      "id": "7Z3b4vG",
+      "name": "тест",
+      "email": "vg.fitlin@gmail.com",
+      "password": "123",
+      "role": "User"
+    },
+    {
+      "id": "v0DcQoz",
+      "name": "test",
+      "email": "qwert@er",
+      "password": "123456",
+      "role": "User"
+    }
+  ],
+  "songs": [
+    {
+      "id": "1",
+      "artist": "Serebro",
+      "track": "Mama Luba",
+      "year": "2019",
+      "fileUrl": "https://res.cloudinary.com/dj5frqeln/video/upload/v1695371735/serebro_-_mama-lyuba_zeyjnm.mp3",
+      "coverUrl": "https://res.cloudinary.com/dj5frqeln/image/upload/v1695371951/1549797936_screenshot_1_teoaib.png",
+      "category": "pop"
+    },
+    {
+      "id": "2",
+      "artist": "Леша Сивик",
+      "track": "Малиновый свет",
+      "year": "2017",
+      "fileUrl": "https://res.cloudinary.com/dj5frqeln/video/upload/v1695371684/lesha-svik-malinovyy-svet_ohlxig.mp3",
+      "coverUrl": "https://res.cloudinary.com/dj5frqeln/image/upload/v1695372020/9fa6c1cdaafa886cb48d2e768a936891_mtfn7v.png",
+      "category": "pop"
+    },
+    {
+      "id": "3",
+      "artist": "Ленинград",
+      "track": "Не Париж",
+      "year": "2018",
+      "fileUrl": "https://res.cloudinary.com/dj5frqeln/video/upload/v1695392832/leningrad_-_ne-parizh_tiu9ic.mp3",
+      "coverUrl": "https://res.cloudinary.com/dj5frqeln/image/upload/v1695392801/maxresdefault_gbkp3n.jpg",
+      "category": "pop"
+    }
+  ],
+  "lists": [
+    {
+      "id": 1,
+      "title": "Orientación prácticas",
+      "desc": "test",
+      "cover": ""
+    },
+    {
+      "id": 2,
+      "title": "Modo de aprendizaje flexible",
+      "desc": "test",
+      "cover": ""
+    },
+    {
+      "id": 3,
+      "title": "Profesores profesionales, Resultados reales",
+      "desc": "test",
+      "cover": ""
+    }
+  ]
+}
