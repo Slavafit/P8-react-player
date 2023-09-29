@@ -6,10 +6,16 @@ const authMiddleware = require('./middleware/authMiddleware')
 const roleMiddleware = require('./middleware/roleMiddleware')
 
 router.post('/registration', [
-    check('username', "Имя пользователя не может быть пустым").notEmpty(),
-    check ('password', "Пароль должен быть более 4 и менее 10 символов").isLength({min:4, max:10})
+     check('username', "Имя пользователя не может быть пустым").notEmpty(),
+     check ('password', "Пароль должен быть более 4 и менее 10 символов").isLength({min:4, max:10})
 ], controller.registration) //вызываем функцию из контроллера authController
 router.post('/login', controller.login)
-router.get('/users', roleMiddleware(['USER', 'ADMIN']), controller.getUsers)
+// router.get('/users', roleMiddleware(['USER', 'ADMIN']), controller.getUsers)
+router.get('/users', controller.getUsers)
+
+router.get('/songs', controller.getSongs)
+router.post('/songs', controller.postSong)
+
+
 
 module.exports = router

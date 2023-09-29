@@ -1,5 +1,6 @@
 const User = require('./models/User')
-const Role = require('./models/Role')
+const Role = require('./models/Role')   //импорт модели
+const Song = require('./models/Song')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator')
@@ -59,6 +60,31 @@ class authController {
         try {
             const users = await User.find()
             res.json(users)
+        } catch (e) {
+
+        }
+    }
+
+
+    async postSong(req, res) {
+        try {
+            // const candidate = await Song.findOne({artist} && {track})    //ищем данные в БД
+            // if (candidate) {        //если нашли вернули сообщение
+            //     return res.status(400).json({message: "Такой артист и трэк уже существует"})
+            // }
+            const { artist, track, year, fileUrl, coverUrl, category} = req.body;
+            const song = new Song({artist, track, year, fileUrl, coverUrl, category })  //создаем пользователя
+            await song.save()   //сохраняем в БД
+            return res.json({message: `${artist} и ${track} успешно зарегистрирован`})  //вернули сообщение клиенту
+        } catch (e) {
+            console.log(e)
+            res.status(400).json({message: 'Post error'})
+        }
+    }
+    async getSongs(req, res) {
+        try {
+            const songs = await Song.find()
+            res.json(songs)
         } catch (e) {
 
         }
