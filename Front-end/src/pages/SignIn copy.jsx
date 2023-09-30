@@ -10,7 +10,7 @@ import "./Registrar.css";
 const Entrar = () => {
   const [validated, setValidated] = useState(false);
   const [loginData, setLoginData] = useState({
-    username: "",
+    email: "",
     password: "",
     rememberMe: false,
   });
@@ -36,7 +36,7 @@ const Entrar = () => {
     } else {
       if (loginData.rememberMe) {
         // Сохраняем данные в localStorage
-        localStorage.setItem("rememberedEmail", loginData.username);
+        localStorage.setItem("rememberedEmail", loginData.email);
         localStorage.setItem("rememberedPassword", loginData.password);
       } else {
         // Удаляем сохраненное значение пароля из localStorage
@@ -46,28 +46,24 @@ const Entrar = () => {
       try {
         const response = await axios.get("http://localhost:5000/users");
         const users = response.data;
-
-        console.log(users);
         const user = users.find(
           (user) =>
-            user.username === loginData.username 
-            // && user.password === loginData.password
+            user.email === loginData.email &&
+            user.password === loginData.password
         );
 
         if (user) {
-          //ищем в массиве roles роль
-          if (user.roles.includes("ADMIN")) {
+          if (user.role === "Admin") {
             navigate("/AdminPanel");
-          } else if (user.roles.includes("USER")) {
-            navigate("/PersonalArea", { state: { user } });
+          }  
+          else if (user.role === "User") {
+              navigate("/PersonalArea", { state: { user } });
           } else {
             setLoginError("Acceso no autorizado");
-            console.log("Acceso no autorizado");
           }
         } else {
           setLoginError("Detalles de acceso incorrectos");
         }
-        
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -94,13 +90,13 @@ const Entrar = () => {
             height="64"
           />
           <Form.Group as={Col} className="mb-3" controlId="formBasicEmail">
-            <Form.Label className="fs-4">Username</Form.Label>
+            <Form.Label className="fs-4">Email</Form.Label>
             <Form.Control
               required
-              // type="email"
-              placeholder="Enter username"
-              name="username"
-              value={loginData.username}
+              type="email"
+              placeholder="Enter email"
+              name="email"
+              value={loginData.email}
               onChange={handleChange}
             />
             <Form.Text className="text-muted">
@@ -111,7 +107,7 @@ const Entrar = () => {
             <Form.Label className="fs-4">Password</Form.Label>
             <Form.Control
               required
-              // type="password"
+              type="password"
               placeholder="Enter password"
               name="password"
               value={loginData.password}

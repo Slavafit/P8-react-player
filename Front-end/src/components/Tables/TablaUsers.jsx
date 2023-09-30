@@ -51,7 +51,7 @@ const UserManagement = () => {
             <th>Name</th>
             <th>Email</th>
             <th>Password</th>
-            <th>Role</th>
+            <th>Roles</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -59,10 +59,10 @@ const UserManagement = () => {
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.name}</td>
+              <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.password}</td>
-              <td>{user.role}</td>
+              <td>{user.roles}</td>
               <td>
                 <Button variant="warning" onClick={() => handleEditUser(user)}>Modificar</Button>
               </td>

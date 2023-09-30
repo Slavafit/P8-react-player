@@ -26,23 +26,23 @@ function SongsList() {
   //модальное окно добавления
   const [showAddModal, setShowAddModal] = useState(false);
   const [newSong, setNewSong] = useState({
-    id: "",
     artist: "",
     track: "",
     year: "",
     fileUrl: "",
     coverUrl: "",
-    category: "",
+    category: []
   });
   //модальное окно редактирования
   const [showEditModal, setShowEditModal] = useState(false);
   const [editSongIndex, seteditSongIndex] = useState(null);
   const [editedSong, setEditedSong] = useState({
-    cover: "",
-    title: "",
-    price: "",
-    time: "",
-    desc: "",
+    artist: "",
+    track: "",
+    year: "",
+    fileUrl: "",
+    coverUrl: "",
+    category: []
   });
 
   const handleEditSong = (index) => {
@@ -60,7 +60,7 @@ function SongsList() {
       year: "",
       fileUrl: "",
       coverUrl: "",
-      category: "",
+      category: []
     });
   };
   //метод редактирования
@@ -80,7 +80,7 @@ function SongsList() {
     }
   };
 
-  //отображение карточек курсов - mostrar tarjetitos
+  //отображение карточек 
   useEffect(() => {
     axios
       .get("http://localhost:5000/songs")
@@ -107,13 +107,15 @@ function SongsList() {
   //метод post для добавления новой карточки
   const handleAddSong = async () => {
     try {
+      console.log(newSong);
+
       const response = await axios.post(
         "http://localhost:5000/songs",
         newSong
       );
       const addedSong = response.data;
-      setSongdata([...Songdata, addedSong]);
-      setNewSong({ id, artist: "", track: "", year: "", fileUrl: "", coverUrl: "", category: "" });
+      setSongdata([...Songdata, addedSong]);  //ответ от сервера
+      setNewSong({ artist: "", track: "", year: "", fileUrl: "", coverUrl: "", category: [] });
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding songs:", error);
@@ -143,8 +145,8 @@ function SongsList() {
   //метод удаления delete
   const handleDeleteSong = async (index) => {
     try {
-      const songIdToDelete = Songdata[index].id; // удаления карточки по "id"
-      await axios.delete(`http://localhost:5000/songs/${songIdToDelete}`);
+      const songDelete = Songdata[index]._id; // удаления карточки по "id"
+      await axios.delete(`http://localhost:5000/songs/?_id=${songDelete}`);
       const updatedSongs = [...Songdata];
       updatedSongs.splice(index, 1);
       setSongdata(updatedSongs);
@@ -157,6 +159,13 @@ function SongsList() {
   if (loading) {
     return <div>Loading...</div>;
   }
+//   import Spinner from 'react-bootstrap/Spinner';
+
+// function BorderExample() {
+//   return <Spinner animation="border" />;
+// }
+
+// export default BorderExample;
 
   if (error) {
     return <div>Error: {error.message}</div>;

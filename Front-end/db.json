@@ -51,7 +51,7 @@
       "year": "2019",
       "fileUrl": "https://res.cloudinary.com/dj5frqeln/video/upload/v1695371735/serebro_-_mama-lyuba_zeyjnm.mp3",
       "coverUrl": "https://res.cloudinary.com/dj5frqeln/image/upload/v1695371951/1549797936_screenshot_1_teoaib.png",
-      "category": "pop"
+      "category": ["pop"]
     },
     {
       "id": "2",
@@ -60,7 +60,7 @@
       "year": "2017",
       "fileUrl": "https://res.cloudinary.com/dj5frqeln/video/upload/v1695371684/lesha-svik-malinovyy-svet_ohlxig.mp3",
       "coverUrl": "https://res.cloudinary.com/dj5frqeln/image/upload/v1695372020/9fa6c1cdaafa886cb48d2e768a936891_mtfn7v.png",
-      "category": "pop"
+      "category": ["pop"]
     },
     {
       "id": "3",
@@ -69,7 +69,7 @@
       "year": "2018",
       "fileUrl": "https://res.cloudinary.com/dj5frqeln/video/upload/v1695392832/leningrad_-_ne-parizh_tiu9ic.mp3",
       "coverUrl": "https://res.cloudinary.com/dj5frqeln/image/upload/v1695392801/maxresdefault_gbkp3n.jpg",
-      "category": "pop"
+      "category": ["pop"]
     }
   ],
   "lists": [
