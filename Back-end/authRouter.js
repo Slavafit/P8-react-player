@@ -13,8 +13,12 @@ router.post('/login', controller.login)
 // router.get('/users', roleMiddleware(['USER', 'ADMIN']), controller.getUsers)
 router.get('/users', controller.getUsers)
 
+// router.get('/songs', controller.getSongsById)
 router.get('/songs', controller.getSongs)
-router.post('/songs', controller.postSong)
+router.post('/songs',  [
+     check('artist', "Поле исполнитель не может быть пустым").notEmpty(),
+], controller.postSong)
+router.delete('/songs', controller.deleteSongs)
 
 
 

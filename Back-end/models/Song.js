@@ -6,7 +6,7 @@ const Song = new Schema({
     year: {type: String },
     fileUrl: {type: String, required: true},
     coverUrl: {type: String },
-    category: [{type: String, ref: 'Category'}]
+    category: [{type: String }]
 })
 
 module.exports = model('Song', Song)

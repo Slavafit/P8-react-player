@@ -65,28 +65,72 @@ class authController {
         }
     }
 
+    
 
     async postSong(req, res) {
         try {
-            // const candidate = await Song.findOne({artist} && {track})    //ищем данные в БД
-            // if (candidate) {        //если нашли вернули сообщение
-            //     return res.status(400).json({message: "Такой артист и трэк уже существует"})
-            // }
             const { artist, track, year, fileUrl, coverUrl, category} = req.body;
+            const candidate = await Song.findOne( {artist} && {track})    //ищем данные в БД
+            if (candidate) {        //если нашли вернули сообщение
+                return res.status(400).json({message: "Такой исполнитель с таким трэком уже существует"})
+            }
             const song = new Song({artist, track, year, fileUrl, coverUrl, category })  //создаем пользователя
             await song.save()   //сохраняем в БД
-            return res.json({message: `${artist} и ${track} успешно зарегистрирован`})  //вернули сообщение клиенту
+            return res.json({message: `Исполнитель: ${artist} с трэком: ${track} успешно сохранен`})  //вернули сообщение клиенту
         } catch (e) {
             console.log(e)
             res.status(400).json({message: 'Post error'})
         }
     }
+
+
     async getSongs(req, res) {
         try {
             const songs = await Song.find()
             res.json(songs)
         } catch (e) {
 
+        }
+    }
+
+    async getSongsById(req, res) {
+        try {
+            const { _id } = req.query;
+            console.log("Received findById request with Id:", _id);
+            const song = await Song.findById(_id);
+    
+            if (!song) {
+                return res.status(404).json({ message: `Song with ${_id} not found` });
+            }
+    
+            res.json(song);
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+    
+
+    // Обработчик для удаления песни по ID
+    async deleteSongs(req, res) {
+        try {
+            const { _id } = req.query; // query для получения _id из параметров
+            console.log("Received DELETE request with ID:", _id); // Вывод _id в консоль для отладки
+
+        const song = await Song.findById(_id); // Используйте _id напрямую
+        if (!song) {
+            console.log(`Song with ${_id} not found`); // Вывод сообщения об ошибке в консоль
+            return res.status(404).json({ message: `Song with ${_id} not found` });
+        }
+
+        // Если песня найдена, удаляем её
+        await song.deleteOne({_id});
+        
+        console.log(`Song with ${_id} deleted`); // Вывод сообщения об успешном удалении в консоль
+        return res.json({ message: `Song with ${_id} deleted` });
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Server error' });
         }
     }
 }
