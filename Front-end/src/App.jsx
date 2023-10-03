@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,  Route,  Routes} from "react-router-dom";
-import "./App.css";
-import Home from "./components/MainPage/Home";
+import Home from "./pages/MainPage/Home";
 import Contactos from "./pages/Contactos";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminPanel from "./pages/AdminPanel";
-import PersonalArea from "./components/PersonalArea/PersonalArea"
-//import { Component } from "react";
+import PersonalArea from "./components/Profil/PersonalArear";
+import SideMenu from "./components/SideMenu"
+import { AuthProvider } from "./Service/AuthContext";
+import "./app.css";
+
 
 export const App = () => {
   return (
+    <AuthProvider>
       <Router>
+        <SideMenu />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Contactos" element={<Contactos />} />
@@ -22,6 +26,7 @@ export const App = () => {
             <Route path="/PersonalArea" element={<PersonalArea />} />
           </Routes>
       </Router>
+    </AuthProvider>
   );
 };
 

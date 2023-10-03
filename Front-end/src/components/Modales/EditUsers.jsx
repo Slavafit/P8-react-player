@@ -3,21 +3,21 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const EditModal = ({ show, onHide, onSubmit, selectedUser, setSelectedUser }) => {
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} style={{ marginTop: '50px' }}>
     <Modal.Header closeButton>
-      <Modal.Title>Modificar</Modal.Title>
+      <Modal.Title>Edit</Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <Form>
         <Form.Group controlId="formBasicName">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
-            value={selectedUser ? selectedUser.name : ""}
+            value={selectedUser ? selectedUser.username : ""}
             onChange={(e) =>
               setSelectedUser({
                 ...selectedUser,
-                name: e.target.value,
+                username: e.target.value,
               })
             }
           />
@@ -31,19 +31,6 @@ const EditModal = ({ show, onHide, onSubmit, selectedUser, setSelectedUser }) =>
               setSelectedUser({
                 ...selectedUser,
                 email: e.target.value,
-              })
-            }
-          />
-        </Form.Group>
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={selectedUser ? selectedUser.password : ""}
-            onChange={(e) =>
-              setSelectedUser({
-                ...selectedUser,
-                password: e.target.value,
               })
             }
           />

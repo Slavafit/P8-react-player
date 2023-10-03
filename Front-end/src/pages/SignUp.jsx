@@ -1,19 +1,16 @@
 import React, { useState, useRef } from "react";
 import { Form, Row, Col, Button, Toast, Container } from "react-bootstrap";
 import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import "./Registrar.css";
+import "./sign.css";
 import axios from "axios";
 import ReCAPTCHA from 'react-google-recaptcha';
 
 function Registrar() {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
-    id: "",
-    name: "",
+    username: "",
     email: "",
     password: "",
-    role: "User",
   });
   const [showSuccessToast, setShowSuccessToast] = useState(false);
 
@@ -38,34 +35,34 @@ function Registrar() {
     event.preventDefault();// Предотвращаем отправку формы по умолчанию Impedir el envío de formularios de forma predeterminada
     const form = event.currentTarget;
 
-  if (form.checkValidity() === false || formData.password !== confirmPassword || captchaValue === null) {
-      event.stopPropagation();
-      setValidated(true);
-      return;
-    } 
+    if (form.checkValidity() === false || formData.password !== confirmPassword || captchaValue === null) {
+        event.stopPropagation();
+        setValidated(true);
+        return;
+      } 
 
       try {
         const response = await axios.post(
-          "http://localhost:5000/users",
-          formData,
-          console.log(formData)
-        );
+          "http://localhost:5000/registration", formData);
         const newUserData = response.data;
-        console.log("Respuesta del servidor:", newUserData);
+        console.log("Server response:", newUserData);
         setFormData({
-          name: "",
+          username: "",
           email: "",
-          password: "",
-          confirmPassword: ""
+          password: ""
         });
         
         setValidated(true);
         setShowSuccessToast(true);
         setTimeout(() => {
-          setShowSuccessToast(false); // Cerrar notificación después de 3s
+          setShowSuccessToast(false); // close alert after 3s
         }, 3000);
       } catch (error) {
-        console.error("Error en el envío de datos:", error);
+        if (error.response && error.response.data && error.response.data.message) {
+          console.error("Server error:", error.response.data.message);
+        } else {
+          console.error("Error sending data:", error);
+        }
       }
     
     form.reset();
@@ -75,23 +72,23 @@ function Registrar() {
   };
 
   return (
-    <Container className="registrar">
+    <Container className="sign">
       <Header />
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
 
           <Row className="mb-1 mt-4 d-flex justify-content-center">
-            <Form.Group as={Col} md="3" controlId="validationCustom01">
-              <Form.Label className="fs-5">Nombre</Form.Label>
+            <Form.Group as={Col} md="3">
+              <Form.Label className="fs-5">Username</Form.Label>
               <Form.Control
-                required
+                // required
                 type="text"
-                name="name"
-                value={formData.nombre}
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
-                placeholder="Nombre"
+                placeholder="Username"
               />
               <Form.Control.Feedback type="invalid">
-                Por favor proporcione un nombre válido.
+                Por favor proporcione un username válido.
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} md="3" controlId="validationCustom02">
@@ -116,15 +113,14 @@ function Registrar() {
               className="p-3"
               controlId="validationCustom03"
             >
-              <Form.Label className="fs-5">Contraseña</Form.Label>
+              <Form.Label className="fs-5">Password</Form.Label>
               <Form.Control
                 required
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Contraseña"
-                defaultValue=""
+                placeholder="Password"
               />
               <Form.Control.Feedback type="invalid">
                 Proporcione una contraseña válida.
@@ -136,15 +132,14 @@ function Registrar() {
               className="p-3"
               controlId="validationCustom04"
             >
-              <Form.Label className="fs-5">Сonfirmar сontraseña</Form.Label>
+              <Form.Label className="fs-5">Confirm password</Form.Label>
               <Form.Control
                   required
                   type="password"
                   name="confirmPassword"
                   value={confirmPassword}
                   onChange={handleConfirmPasswordChange}
-                  placeholder="Confirmar сontraseña"
-                  defaultValue=""
+                  placeholder="Confirm password"
                   isInvalid={formData.password !== confirmPassword}
               />
               <Form.Control.Feedback type="invalid">
@@ -173,11 +168,10 @@ function Registrar() {
           <Toast.Header>
             <strong className="me-auto">Éxito!</strong>
           </Toast.Header>
-          <Toast.Body>¡Datos enviados exitosamente!</Toast.Body>
+          <Toast.Body>
+            ¡Datos enviados exitosamente!</Toast.Body>
         </Toast>
-        <div>.</div>
-        <Footer/>
-    </Container>
+      </Container>
   );
 }
 

@@ -24,7 +24,7 @@ const Header = () => {
       <Container>
         <Navbar.Brand as={NavLink} to="/" className="text-dark">
           <img src={logo} alt="Logo" className="d-inline-block" style={{ width: "64px" }} />
-            mp3 Cloud
+           Cloud App
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">

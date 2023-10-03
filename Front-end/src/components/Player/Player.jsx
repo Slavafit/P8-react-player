@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Paper, Typography, IconButton } from '@mui/material';
-// import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-// import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ReactPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css'; // Import the styles
+import 'react-h5-audio-player/lib/styles.css';
 
 import { fetchSongs } from "../../Service/Api";
 
@@ -47,25 +45,18 @@ function AudioPlayer() {
 
   return (
     <Container maxWidth="xs">
-      <Paper elevation={3} style={{ padding: '20px', textAlign: 'center' }}>
+      <Paper elevation={3} style={{ padding: '20px', textAlign: 'left' }}>
         <img src={songs[currentTrackIndex].coverUrl} alt="Album Art" style={{ width: '100%' }} />
         <Typography variant="h5" style={{ margin: '10px 0' }}>{songs[currentTrackIndex].artist}</Typography>
         <Typography variant="subtitle1">{songs[currentTrackIndex].track}</Typography>
-        <div>
-          <IconButton onClick={handlePreviousTrack}>
-            <SkipPreviousIcon fontSize="large"/>
+        <Typography style={{ textAlign: 'center' }}>
+          <IconButton onClick={handlePreviousTrack} >
+            <SkipPreviousIcon fontSize="large" />
           </IconButton>
-          {/* <IconButton onClick={() => setIsPlaying(!isPlaying)}>
-            {isPlaying ? (
-              <PauseCircleOutlineIcon fontSize="large"/>
-            ) : (
-              <PlayCircleOutlineIcon fontSize="large"/>
-            )}
-          </IconButton> */}
           <IconButton onClick={handleNextTrack}>
             <SkipNextIcon fontSize="large"/>
           </IconButton>
-        </div>
+        </Typography>
         <ReactPlayer
           src={songs[currentTrackIndex].fileUrl}
           autoPlay={isPlaying}

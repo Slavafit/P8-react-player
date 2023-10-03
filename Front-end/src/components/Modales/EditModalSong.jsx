@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const EditModal = ({ show, onHide, onSubmit, editedSong, setEditedSong }) => {
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} style={{ marginTop: '50px' }}>
       <Modal.Header closeButton>
         <Modal.Title>Modificar tarjetita</Modal.Title>
       </Modal.Header>
@@ -70,16 +70,23 @@ const EditModal = ({ show, onHide, onSubmit, editedSong, setEditedSong }) => {
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Control
-                as="select"
-                placeholder="Enter category"
-                value={editedSong.category}
-                onChange={(e) =>
-                  setEditedSong({ ...editedSong, category: e.target.value })
-                }
-              >
-              <option value="pop">Pop</option>
-              <option value="dance">Dance</option>
-              </Form.Control>
+                  as="select"
+                  multiple
+                  value={editedSong.category}
+                  onChange={(e) => {
+                    const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+                    setEditedSong({
+                      ...editedSong,
+                      category: selectedOptions
+                    });
+                  }}
+                >
+                  <option value="pop">pop</option>
+                  <option value="dance">dance</option>
+                  <option value="rock">rock</option>
+                  <option value="other">other</option>
+
+                </Form.Control>
             </Form.Group>
           </Form>
         </Modal.Body>

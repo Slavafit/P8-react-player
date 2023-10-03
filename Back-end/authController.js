@@ -15,22 +15,24 @@ const generateAccessToken = (id, roles) => {
 } 
 
 class authController {
+
+
     async registration(req, res) {
         try {
-            const errors = validationResult(req)
+            const errors = validationResult(req);
             if (!errors.isEmpty() ) {
-                return res.status(400).json({message: "Ошибка при регистрации", errors})
+                return res.status(400).json({ message: `Validation error: ${errors}` });
             }
-            const {username, password } = req.body;
-            const candidate = await User.findOne({username})    //ищем пользователя в БД
+            const {username, email, password } = req.body;
+            const candidate = await User.findOne({username} || {email});    //ищем пользователя в БД
             if (candidate) {        //если нашли вернули сообщение
-                return res.status(400).json({message: "Пользователь с таким именем уже существует"})
+                return res.status(400).json({message: `User with ${username} or ${email} already exists`});
             }
             const hashPassword = bcrypt.hashSync(password, 7);  //захешировали пароль
             const userRole = await Role.findOne({value: "USER"})    //ищем роль
-            const user = new User({username, password: hashPassword, roles: [userRole.value]})  //создаем пользователя
+            const user = new User({username, email, password: hashPassword, roles: [userRole.value]})  //создаем пользователя
             await user.save()   //сохраняем в БД
-            return res.json({message: "Пользователь успешно зарегистрирован"})  //вернули сообщение клиенту
+            return res.json({message: `User ${username} has been successfully registered`})  //вернули сообщение клиенту
         } catch (e) {
             console.log(e)
             res.status(400).json({message: 'Registration error'})
@@ -39,15 +41,19 @@ class authController {
 
     async login(req, res) {
         try {
-            const {username, password} = req.body
-            const user = await User.findOne({username})
+            const { email, password } = req.body    //получили данные от клиента
+            //ищем пользователя в базе
+            const user = await User.findOne({email})
+            //если не найден, то объект будет пустой и пойдет по условию ниже
             if (!user) {
-                return res.status(400).json({message: `Пользователь ${username} не найден`})
+                return res.status(400).json({message: `User with ${email} not found`})
             }
+            //расшифровываю пароль клиента при помощи compareSync
             const validPassword = bcrypt.compareSync(password, user.password)
             if (!validPassword) {
-                return res.status(400).json({message: `Введен неверный пароль`})
+                return res.status(400).json({message: `Incorrect password entered`})
             }
+            //генерирую токен и отправляю клиенту
             const token = generateAccessToken(user._id, user.roles)
             return res.json({token})
         } catch (e) {
@@ -65,18 +71,55 @@ class authController {
         }
     }
 
-    
+    // Обработчик для изменения пользователя по Id
+    async updateUser(req, res) {
+        try {
+            const { _id } = req.query;
+            const updatedUser = req.body; // обновленные данные из тела запроса
+            //Заменяем найденное новым объектом
+            const user = await User.findByIdAndUpdate(_id, updatedUser, { new: true });
+
+            if (!user) {
+                return res.status(404).json({ message: `User with ${_id} not updated` });
+            }
+            res.json(user); // обновленные данные в ответе
+
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    // Обработчик для удаления User по Id
+    async deleteUser(req, res) {
+        try {
+            const { _id } = req.query; // query для получения _id из параметров
+            // console.log("Received deleteUser request with Id:", _id);
+            const user = await User.findById(_id); // Используйте _id напрямую
+            if (!user) {
+                return res.status(404).json({ message: `User with ${_id} not found` });
+            }
+            // Если user найден, удаляем
+            // console.log("User Id: ", _id, " deleted");
+            await user.deleteOne({_id});
+        
+            return res.json({ message: `User with ${_id} deleted` });
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
 
     async postSong(req, res) {
         try {
             const { artist, track, year, fileUrl, coverUrl, category} = req.body;
             const candidate = await Song.findOne( {artist} && {track})    //ищем данные в БД
             if (candidate) {        //если нашли вернули сообщение
-                return res.status(400).json({message: "Такой исполнитель с таким трэком уже существует"})
+                return res.status(400).json({message: "Such an artist with such a track already exists"})
             }
             const song = new Song({artist, track, year, fileUrl, coverUrl, category })  //создаем пользователя
             await song.save()   //сохраняем в БД
-            return res.json({message: `Исполнитель: ${artist} с трэком: ${track} успешно сохранен`})  //вернули сообщение клиенту
+            return res.json({message: `artist: ${artist} with track: ${track} successfully saved`})  //вернули сообщение клиенту
         } catch (e) {
             console.log(e)
             res.status(400).json({message: 'Post error'})
@@ -89,7 +132,8 @@ class authController {
             const songs = await Song.find()
             res.json(songs)
         } catch (e) {
-
+            console.log(e)
+            res.status(400).json({message: 'getSongs error'})
         }
     }
 
@@ -110,24 +154,38 @@ class authController {
         }
     }
     
+    // Обработчик для изменения песни по Id
+    async updateSongs(req, res) {
+        try {
+            const { _id } = req.query;
+            const updatedSong = req.body; // обновленные данные песни из тела запроса
+            //Заменяем найденую песню новым объектом
+            const song = await Song.findByIdAndUpdate(_id, updatedSong, { new: true });
+
+            if (!song) {
+                return res.status(404).json({ message: `Song with ${_id} not updated` });
+            }
+
+            res.json(song); // Отправьте обновленные данные песни в ответе
+
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
 
     // Обработчик для удаления песни по ID
     async deleteSongs(req, res) {
         try {
             const { _id } = req.query; // query для получения _id из параметров
-            console.log("Received DELETE request with ID:", _id); // Вывод _id в консоль для отладки
+            const song = await Song.findById(_id); // Используйте _id напрямую
+            if (!song) {
+                return res.status(404).json({ message: `Song with ${_id} not found` });
+            }
 
-        const song = await Song.findById(_id); // Используйте _id напрямую
-        if (!song) {
-            console.log(`Song with ${_id} not found`); // Вывод сообщения об ошибке в консоль
-            return res.status(404).json({ message: `Song with ${_id} not found` });
-        }
-
-        // Если песня найдена, удаляем её
-        await song.deleteOne({_id});
-        
-        console.log(`Song with ${_id} deleted`); // Вывод сообщения об успешном удалении в консоль
-        return res.json({ message: `Song with ${_id} deleted` });
+            // Если песня найдена, удаляем её
+            await song.deleteOne({_id});
+            return res.json({ message: `Song with ${_id} deleted` });
         } catch (e) {
             console.log(e)
             res.status(500).json({ message: 'Server error' });

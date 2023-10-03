@@ -3,7 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const AddModal = ({ show, onHide, onSubmit, newSong, setNewSong }) => {
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} style={{ marginTop: '50px' }}>
       <Modal.Header closeButton>
         <Modal.Title>Add song</Modal.Title>
       </Modal.Header>
@@ -35,7 +35,7 @@ const AddModal = ({ show, onHide, onSubmit, newSong, setNewSong }) => {
             <Form.Group controlId="year">
               <Form.Label>Year</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 rows={3}
                 placeholder="Year"
                 value={newSong.year}

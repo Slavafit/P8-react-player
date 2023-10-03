@@ -13,7 +13,6 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 
 import ReactAudioPlayer from "react-audio-player";
 import { fetchSongs } from "../../Service/Api";
-import "./SongsCard.css";
 
 export default function CardCarousel({ cards }) {
   const [songs, setData] = useState([]);
