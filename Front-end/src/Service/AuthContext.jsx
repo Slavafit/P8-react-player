@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    // localStorage.removeItem('token');
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
     sessionStorage.removeItem("isAuthenticated");
   };

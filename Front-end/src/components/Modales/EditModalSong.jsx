@@ -5,7 +5,7 @@ const EditModal = ({ show, onHide, onSubmit, editedSong, setEditedSong }) => {
   return (
     <Modal show={show} onHide={onHide} style={{ marginTop: '50px' }}>
       <Modal.Header closeButton>
-        <Modal.Title>Modificar tarjetita</Modal.Title>
+        <Modal.Title>Edit</Modal.Title>
       </Modal.Header>
       <Modal.Body>
           <Form>

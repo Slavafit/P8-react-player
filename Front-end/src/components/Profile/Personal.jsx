@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import {  MDBCol,  MDBContainer,  MDBRow,  MDBCard,  MDBCardText,  MDBCardBody,  MDBCardImage,  MDBBtn,
   MDBProgress,  MDBProgressBar} from 'mdb-react-ui-kit';
-import Header from '../Header/Header';
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -11,7 +10,6 @@ const ProfilePage = () => {
 
   return (
     <section style={{ backgroundColor: '#eee' }}>
-      <Header />
       <MDBContainer className="py-5">
       <MDBRow>
           <MDBCol lg="4">

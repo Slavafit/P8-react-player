@@ -34,7 +34,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -82,7 +82,7 @@ export default function AccountMenu() {
          <MenuItem onClick={() => {
             handleClose();
             logout();
-          }}>
+            }}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

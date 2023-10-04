@@ -13,6 +13,7 @@ const AddModal = ({ show, onHide, onSubmit, newSong, setNewSong }) => {
               <Form.Label>Artist</Form.Label>
               <Form.Control
                 type="text"
+                rows={3}
                 placeholder="Enter artist"
                 value={newSong.artist}
                 onChange={(e) =>

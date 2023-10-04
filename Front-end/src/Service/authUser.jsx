@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 
 // Функция для аутентификации пользователя
 const authUser = async (email, password) => {
@@ -16,7 +16,6 @@ const authUser = async (email, password) => {
         email,
         password,
       });
-
       // Получить JWT-токен из ответа сервера
       const token = response.data.token;
       // Сохранить токен в localStorage или в памяти приложения
@@ -26,9 +25,19 @@ const authUser = async (email, password) => {
     }
   } catch (error) {
     // Вернуть ошибку аутентификации
-    console.log("Error auth");
+    const responde = error.response.data.message
+    console.log("Error authUser", responde);
+    showAlert(responde);
     return false;
   }
+
+  function showAlert(responde) {
+    Swal.fire(
+      `${responde}`,
+      'Please, repeat your input',
+      'warning'
+    )
+  }  
 };
 
 // Функция для добавления токена в заголовок запроса
@@ -41,4 +50,6 @@ const addTokenToHeaders = () => {
   }
 };
 
+ 
 export { authUser, addTokenToHeaders };
+

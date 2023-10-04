@@ -6,7 +6,7 @@ import Contactos from "./pages/Contactos";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminPanel from "./pages/AdminPanel";
-import PersonalArea from "./components/Profil/PersonalArear";
+import Personal from "./components/Profile/Personal";
 import SideMenu from "./components/SideMenu"
 import { AuthProvider } from "./Service/AuthContext";
 import "./app.css";
@@ -23,7 +23,7 @@ export const App = () => {
             <Route path="/SignIn" element={<SignIn />} />
             <Route path="/SignUp" element={<SignUp />} />
             <Route path="/AdminPanel" element={<AdminPanel />} />
-            <Route path="/PersonalArea" element={<PersonalArea />} />
+            <Route path="/PersonalArea" element={<Personal />} />
           </Routes>
       </Router>
     </AuthProvider>

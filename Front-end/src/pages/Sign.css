@@ -7,3 +7,6 @@
     rgba(18, 236, 208, 1) 92%
   );
 }
+.colored-toast.swal2-icon-info {
+  background-color: #3fc3ee !important;
+}
