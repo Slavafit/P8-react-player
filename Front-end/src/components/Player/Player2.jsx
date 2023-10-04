@@ -43,7 +43,7 @@ export default function CardCarousel({ cards }) {
   return (
     <>
       <Card sx={{ maxWidth: 345 }}>
-        <CardHeader/>
+        {/* <CardHeader/> */}
         <CardMedia
           component="img"
           height="250"
