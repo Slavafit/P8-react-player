@@ -8,41 +8,44 @@ import {
   Button,
   } from "react-bootstrap";
 import axios from "axios";
-import "./AdminPanel.css";
 import TablaUsers from "../components/Tables/TablaUsers";
-import TablaLists from "../components/Tables/TablaLists";
+// import TablaLists from "../components/Tables/TablaLists";
 import TopButton from "../components/TopButton/TopButton";
-import Header from "../components/Header/Header";
 import AddModalSong from "../components/Modales/AddModalSong";
 import DeleteModalSong from "../components/Modales/DeleteModalSong";
 import EditModalSong from "../components/Modales/EditModalSong";
-import "./Registrar.css";
+// import { fetchSongs } from "../Service/Api";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
+
 
 function SongsList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
   const [Songdata, setSongdata] = useState([]);
+
   //модальное окно добавления
   const [showAddModal, setShowAddModal] = useState(false);
   const [newSong, setNewSong] = useState({
-    id: "",
     artist: "",
     track: "",
     year: "",
     fileUrl: "",
     coverUrl: "",
-    category: "",
+    category: []
   });
   //модальное окно редактирования
   const [showEditModal, setShowEditModal] = useState(false);
   const [editSongIndex, seteditSongIndex] = useState(null);
   const [editedSong, setEditedSong] = useState({
-    cover: "",
-    title: "",
-    price: "",
-    time: "",
-    desc: "",
+    artist: "",
+    track: "",
+    year: "",
+    fileUrl: "",
+    coverUrl: "",
+    category: []
   });
 
   const handleEditSong = (index) => {
@@ -60,15 +63,16 @@ function SongsList() {
       year: "",
       fileUrl: "",
       coverUrl: "",
-      category: "",
+      category: []
     });
   };
+  
   //метод редактирования
   const handleSaveEditedSong = async () => {
     try {
-      const songIdToEdit = Songdata[editSongIndex].id; // Assuming each song has an "id" field
+      const songIdToEdit = Songdata[editSongIndex]._id; // Assuming each song has an "id" field
       await axios.put(
-        `http://localhost:5000/songs/${songIdToEdit}`,
+        `http://localhost:5000/songs/?_id=${songIdToEdit}`,
         editedSong
       );
       const updatedSongs = [...Songdata];
@@ -80,7 +84,7 @@ function SongsList() {
     }
   };
 
-  //отображение карточек курсов - mostrar tarjetitos
+  //отображение карточек 
   useEffect(() => {
     axios
       .get("http://localhost:5000/songs")
@@ -94,7 +98,6 @@ function SongsList() {
       });
   }, []);
 
-
   //открытие -
   const handleAddModalShow = () => {
     setShowAddModal(true);
@@ -107,13 +110,13 @@ function SongsList() {
   //метод post для добавления новой карточки
   const handleAddSong = async () => {
     try {
-      const response = await axios.post(
+        const response = await axios.post(
         "http://localhost:5000/songs",
         newSong
       );
       const addedSong = response.data;
-      setSongdata([...Songdata, addedSong]);
-      setNewSong({ id, artist: "", track: "", year: "", fileUrl: "", coverUrl: "", category: "" });
+      setSongdata([...Songdata, addedSong]);  //ответ от сервера
+      setNewSong({ artist: "", track: "", year: "", fileUrl: "", coverUrl: "", category: [] });
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding songs:", error);
@@ -123,17 +126,17 @@ function SongsList() {
   //модальное окно для удаления карточки
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [songToDeleteIndex, setSongToDeleteIndex] = useState(null);
-//показать модальное окно
+    //показать модальное окно
   const handleDeleteConfirmationShow = (index) => {
     setSongToDeleteIndex(index);
     setShowDeleteConfirmation(true);
   };
-//закрыть модальное окно
+    //закрыть модальное окно
   const handleDeleteConfirmationClose = () => {
     setShowDeleteConfirmation(false);
     setSongToDeleteIndex(null);
   };
-//подтверждение удаления
+    //подтверждение удаления
   const handleDeleteSongConfirmed = () => {
     if (songToDeleteIndex !== null) {
       handleDeleteSong(songToDeleteIndex);
@@ -143,8 +146,8 @@ function SongsList() {
   //метод удаления delete
   const handleDeleteSong = async (index) => {
     try {
-      const songIdToDelete = Songdata[index].id; // удаления карточки по "id"
-      await axios.delete(`http://localhost:5000/songs/${songIdToDelete}`);
+      const songDelete = Songdata[index]._id; // удаления карточки по "id"
+      await axios.delete(`http://localhost:5000/songs/?_id=${songDelete}`);
       const updatedSongs = [...Songdata];
       updatedSongs.splice(index, 1);
       setSongdata(updatedSongs);
@@ -155,16 +158,20 @@ function SongsList() {
 
   //блок ошибок загрузки
   if (loading) {
-    return <div>Loading...</div>;
-  }
+    return <Backdrop
+    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    open={loading}>
+    <CircularProgress color="inherit" />
+  </Backdrop>
+  };
+
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
 
   return (
-    <Container className="registrar">
-      <Header />
+    <Container className="sign">
       <h1>Songs control</h1>
       <Button
         className="mt-4 text-center mx-auto d-block"
@@ -175,27 +182,29 @@ function SongsList() {
       </Button>
       <Row className="d-flex justify-content-center">
         {Songdata.map((value, index) => (
-          <Col key={index} xs={12} sm={6} md={4} lg={3} className="mt-3">
+          <Col key={index} xs={12} sm={6} md={4} lg={2} className="mt-3">
             <Card
               style={{
-                width: "15rem",
+                width: "10rem",
                 boxShadow: "0 5px 8px rgba(0, 0, 0, 0.5)",
               }}
             >
               <Card.Img variant="top" src={value.coverUrl} />
               <Card.Body>
-                <Card.Title>Artist: {value.artist}</Card.Title>
+                <Card.Text>Artist: {value.artist}</Card.Text>
                 <Card.Text>Track: {value.track}</Card.Text>
                 <Card.Text>Year: {value.year}</Card.Text>
               </Card.Body>
               <ListGroup className="list-group-flush">
                 <ListGroup.Item>FileUrl: {value.fileUrl}</ListGroup.Item>
-                <ListGroup.Item>Category: {value.category}</ListGroup.Item>
+                <ListGroup.Item>
+                  Category: {value.category ? value.category.join(', ') : ''}
+                </ListGroup.Item>
               </ListGroup>
               <Card.Body className="d-flex justify-content-between">
                 <Button
                   variant="warning"
-                  className="me-5"
+                  className="me-2"
                   onClick={() => handleEditSong(index)}
                 >
                   Edit
@@ -239,7 +248,8 @@ function SongsList() {
         onConfirm={handleDeleteSongConfirmed}
       />
       <TablaUsers />
-      <TablaLists />
+      <div>.</div>
+      {/* <TablaLists /> */}
       <TopButton />
     </Container>
   );

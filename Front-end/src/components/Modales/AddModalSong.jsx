@@ -3,16 +3,17 @@ import { Modal, Button, Form } from "react-bootstrap";
 
 const AddModal = ({ show, onHide, onSubmit, newSong, setNewSong }) => {
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} style={{ marginTop: '50px' }}>
       <Modal.Header closeButton>
         <Modal.Title>Add song</Modal.Title>
       </Modal.Header>
       <Modal.Body>
           <Form>
-            <Form.Group controlId="artist">
+            <Form.Group>
               <Form.Label>Artist</Form.Label>
               <Form.Control
                 type="text"
+                rows={3}
                 placeholder="Enter artist"
                 value={newSong.artist}
                 onChange={(e) =>
@@ -35,7 +36,7 @@ const AddModal = ({ show, onHide, onSubmit, newSong, setNewSong }) => {
             <Form.Group controlId="year">
               <Form.Label>Year</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 rows={3}
                 placeholder="Year"
                 value={newSong.year}
@@ -68,18 +69,25 @@ const AddModal = ({ show, onHide, onSubmit, newSong, setNewSong }) => {
               />
             </Form.Group>
             <Form.Group controlId="category">
-          <Form.Label>Category</Form.Label>
-          <Form.Control
-            as="select"
-            value={newSong.category}
-            onChange={(e) =>
-              setNewSong({ ...newSong, category: e.target.value })
-            }
-          >
-            <option value="Pop">Pop</option>
-            <option value="Dance">Dance</option>
-          </Form.Control>
-        </Form.Group>
+              <Form.Label>Category</Form.Label>
+                <Form.Control
+                  as="select"
+                  multiple
+                  value={newSong.category}
+                  onChange={(e) => {
+                    const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+                    setNewSong({
+                      ...newSong,
+                      category: selectedOptions
+                    });
+                  }}
+                >
+                  <option value="pop">pop</option>
+                  <option value="dance">dance</option>
+                  <option value="rock">rock</option>
+                  <option value="other">other</option>
+                </Form.Control>
+            </Form.Group>
           </Form>
         </Modal.Body>
       <Modal.Footer>

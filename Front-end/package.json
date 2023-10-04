@@ -1,5 +1,5 @@
 {
-  "name": "vite-project",
+  "name": "project8",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -19,20 +19,19 @@
     "axios": "^1.5.0",
     "bootstrap": "^5.3.1",
     "jsdom": "^22.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mdb-react-ui-kit": "^6.3.0",
     "prop-types": "^15.8.1",
     "ra-data-json-server": "^4.13.2",
     "ra-data-simple-rest": "^4.13.2",
     "react": "^18.0.0",
-    "react-admin": "^4.13.2",
-    "react-audio-player": "^0.17.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.0.0",
     "react-google-recaptcha": "^3.1.0",
     "react-h5-audio-player": "^3.9.0",
-    "react-icons": "^4.10.1",
     "react-router": "^6.15.0",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.16.0",
+    "sweetalert2": "^11.7.31"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.1",

@@ -6,15 +6,16 @@ module.exports = function (req, res, next) {
         next()
     }
     try {
+        //извлекаю токен из заголовков, делим строку на 2 части и берем вторую часть [1]
         const token = req.headers.authorization.split(' ')[1]
-            if (!token) {
-            return res.status(403).json({message: "Пользователь не авторизован"})
+            if (!token) {       //если нет токена
+            return res.status(403).json({message: "User is not authorized"})
         }
         const decodedData = jwt.verify(token, secret)   //здесь лежит объект payload (id, roles)  пользователя
         req.user = decodedData
         next()
     } catch (e) {
         console.log(e)
-        return res.status(403).json({message: "Пользователь не авторизован"})
+        return res.status(403).json({message: "User is not authorized"})
     }
 }

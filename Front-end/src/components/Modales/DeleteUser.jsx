@@ -1,11 +1,11 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-const DeleteConfirmationModal = ({ show, onHide, onConfirm }) => {
+const DeleteUserModal = ({ show, onHide, onSubmit }) => {
   return (
     <Modal show={show} onHide={onHide} style={{ marginTop: '50px' }}>
       <Modal.Header closeButton>
-        <Modal.Title>Delete song</Modal.Title>
+        <Modal.Title>Delete user</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>Confirm delete</p>
@@ -14,7 +14,7 @@ const DeleteConfirmationModal = ({ show, onHide, onConfirm }) => {
         <Button variant="secondary" onClick={onHide}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={onConfirm}>
+        <Button variant="danger" onClick={onSubmit}>
           Ok
         </Button>
       </Modal.Footer>
@@ -22,4 +22,4 @@ const DeleteConfirmationModal = ({ show, onHide, onConfirm }) => {
   );
 };
 
-export default DeleteConfirmationModal;
+export default DeleteUserModal;

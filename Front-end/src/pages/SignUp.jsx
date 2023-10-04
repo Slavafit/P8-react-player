@@ -1,21 +1,19 @@
 import React, { useState, useRef } from "react";
-import { Form, Row, Col, Button, Toast, Container } from "react-bootstrap";
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import "./Registrar.css";
+import { Form, Row, Col, Button, Container } from "react-bootstrap";
+import "./sign.css";
 import axios from "axios";
 import ReCAPTCHA from 'react-google-recaptcha';
+import Swal from 'sweetalert2';
 
-function Registrar() {
+
+function Register() {
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState({
-    id: "",
-    name: "",
+    username: "",
     email: "",
     password: "",
-    role: "User",
+    confirmPassword: ""
   });
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const handleConfirmPasswordChange = (event) => {
@@ -38,34 +36,35 @@ function Registrar() {
     event.preventDefault();// Предотвращаем отправку формы по умолчанию Impedir el envío de formularios de forma predeterminada
     const form = event.currentTarget;
 
-  if (form.checkValidity() === false || formData.password !== confirmPassword || captchaValue === null) {
-      event.stopPropagation();
-      setValidated(true);
-      return;
-    } 
+    if (form.checkValidity() === false || formData.password !== confirmPassword || captchaValue === null) {
+        event.stopPropagation();
+        setValidated(true);
+        return;
+      } 
 
       try {
         const response = await axios.post(
-          "http://localhost:5000/users",
-          formData,
-          console.log(formData)
-        );
-        const newUserData = response.data;
-        console.log("Respuesta del servidor:", newUserData);
+          "http://localhost:5000/registration", formData);
+        // let responseMessage = response.data.message;
+        // console.log("Server response:", responseMessage);
         setFormData({
-          name: "",
+          username: "",
           email: "",
           password: "",
           confirmPassword: ""
         });
         
         setValidated(true);
-        setShowSuccessToast(true);
-        setTimeout(() => {
-          setShowSuccessToast(false); // Cerrar notificación después de 3s
-        }, 3000);
-      } catch (error) {
-        console.error("Error en el envío de datos:", error);
+          // Вызываем функцию для отображения всплывающего уведомления
+        showAutoCloseAlert(response.data.message);
+        } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          console.error("Server error:", error.response);
+        } else {
+          console.error("Error sending data:", error);
+          const resMessage = error.response.data.errors[0];
+          showAutoCloseAlert(resMessage.message);
+        }
       }
     
     form.reset();
@@ -74,24 +73,53 @@ function Registrar() {
     setValidated(true);
   };
 
+  function showAutoCloseAlert(responseMessage) {
+    let timerInterval;
+  
+    Swal.fire({
+      icon: 'info',
+      title: responseMessage,
+      html: 'Please, check your data. It will be close in <b></b> ms.',
+      timer: 5000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const b = Swal.getHtmlContainer().querySelector('b');
+        timerInterval = setInterval(() => {
+          b.textContent = Swal.getTimerLeft();
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      }
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        
+      }
+    });
+  }
+  
+
+  
+
   return (
-    <Container className="registrar">
-      <Header />
+    <Container className="sign">
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
 
           <Row className="mb-1 mt-4 d-flex justify-content-center">
-            <Form.Group as={Col} md="3" controlId="validationCustom01">
-              <Form.Label className="fs-5">Nombre</Form.Label>
+            <Form.Group as={Col} md="3">
+              <Form.Label className="fs-5">Username</Form.Label>
               <Form.Control
                 required
                 type="text"
-                name="name"
-                value={formData.nombre}
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
-                placeholder="Nombre"
+                placeholder="Username"
               />
               <Form.Control.Feedback type="invalid">
-                Por favor proporcione un nombre válido.
+                Please, provide a valid username.
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} md="3" controlId="validationCustom02">
@@ -105,7 +133,7 @@ function Registrar() {
                 placeholder="Email address"
               />
               <Form.Control.Feedback type="invalid">
-                Por favor ingrese su dirección de correo electrónico válida.
+              Please, enter your valid email address.
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -116,18 +144,17 @@ function Registrar() {
               className="p-3"
               controlId="validationCustom03"
             >
-              <Form.Label className="fs-5">Contraseña</Form.Label>
+              <Form.Label className="fs-5">Password</Form.Label>
               <Form.Control
                 required
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Contraseña"
-                defaultValue=""
+                placeholder="Password"
               />
               <Form.Control.Feedback type="invalid">
-                Proporcione una contraseña válida.
+                Please provide a valid password.
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group
@@ -136,19 +163,18 @@ function Registrar() {
               className="p-3"
               controlId="validationCustom04"
             >
-              <Form.Label className="fs-5">Сonfirmar сontraseña</Form.Label>
+              <Form.Label className="fs-5">Confirm password</Form.Label>
               <Form.Control
                   required
                   type="password"
                   name="confirmPassword"
                   value={confirmPassword}
                   onChange={handleConfirmPasswordChange}
-                  placeholder="Confirmar сontraseña"
-                  defaultValue=""
+                  placeholder="Confirm password"
                   isInvalid={formData.password !== confirmPassword}
               />
               <Form.Control.Feedback type="invalid">
-              Las contraseñas no coinciden.
+              Passwords do not match.
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -161,24 +187,10 @@ function Registrar() {
           <Button type="submit" className="mt-4 text-center mx-auto d-block">
             Send
           </Button>
+          <p className="mt-5 mb-3 text-center text-muted"> Music cloud © 2023</p>
         </Form>
-        <Toast
-          show={showSuccessToast}
-          onClose={() => setShowSuccessToast(false)}
-          style={{
-            position: "fixed",
-          }}
-          className="text-center position-absolute top-50 start-50 translate-middle"
-        >
-          <Toast.Header>
-            <strong className="me-auto">Éxito!</strong>
-          </Toast.Header>
-          <Toast.Body>¡Datos enviados exitosamente!</Toast.Body>
-        </Toast>
-        <div>.</div>
-        <Footer/>
-    </Container>
+      </Container>
   );
 }
 
-export default Registrar;
+export default Register;
