@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
+import { purple } from '@mui/material/colors';
 import { useAuth } from "../Service/AuthContext";
 import { Link } from "react-router-dom";
 
@@ -16,7 +17,9 @@ export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const { logout } = useAuth();
-  const handleClick = (event) => {
+  const username = sessionStorage.getItem('username');
+  const role = sessionStorage.getItem('role');
+    const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -34,7 +37,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>A</Avatar>
+            <Avatar sx={{ bgcolor: purple[500], width: 32, height: 32 }}>{username.charAt(0)}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -73,11 +76,27 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
-          <Link to="/AdminPanel" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Avatar /> Admin Panel
+        <MenuItem>Hello {username} !</MenuItem>
+        {/* <MenuItem onClick={handleClose}>
+          <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
+          Dashboard
           </Link>
-        </MenuItem>
+        </MenuItem> */}
+          {role === 'ADMIN' && ( // Проверяем, если роль - ADMIN
+          <MenuItem onClick={handleClose}>
+            <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Dashboard
+            </Link>
+          </MenuItem>
+        )}
+
+        {role === 'USER' && ( // Проверяем, если роль - USER
+          <MenuItem onClick={handleClose}>
+            <Link to="/personal" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Personal
+            </Link>
+          </MenuItem>
+        )}
         <Divider />
          <MenuItem onClick={() => {
             handleClose();

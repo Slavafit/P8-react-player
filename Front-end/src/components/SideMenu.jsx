@@ -20,12 +20,13 @@ import ListItemText from '@mui/material/ListItemText';
 import HouseOutlinedIcon from '@mui/icons-material/HouseOutlined';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-;
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 
 import AvatarMenu  from "./AvatarMenu";
 import logo from "../assets/images/logo.png";
 import SignInButton from './SignInButton';
 import { useAuth } from "../Service/AuthContext";
+import SwitchTheme from "./switch";
 
 
 const drawerWidth = 200;
@@ -90,7 +91,7 @@ export default function SideMenu() {
 
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex'}} >
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar sx={{ ml: 5 }}>
@@ -101,6 +102,8 @@ export default function SideMenu() {
             Cloud music
             </Link>
           </Typography>
+          <SwitchTheme/>
+
           <div style={{ marginRight: '10px' }}>
             {isAuthenticated && <AvatarMenu />}
           </div>
@@ -139,18 +142,7 @@ export default function SideMenu() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        {/* <List>
-          {['Inbox', 'Starred'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <HouseOutlinedIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
+      
         <List>
           {[
             { text: 'Home', link: '/' },
@@ -169,13 +161,13 @@ export default function SideMenu() {
         <Divider />
         <List>
           {[
-            { text: 'Home', link: '/' },
+            { text: 'SignIn', link: '/SignIn' },
             { text: 'About us', link: '/Contactos' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton component={Link} to={item.link}>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <HouseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
+                  {index % 2 === 0 ? <LoginRoundedIcon /> : <HelpOutlineOutlinedIcon />}
                 </ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>

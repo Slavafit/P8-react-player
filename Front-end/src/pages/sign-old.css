@@ -1,0 +1,13 @@
+:root {
+  --background-light: linear-gradient(0deg, rgba(253, 187, 45, 1) 0%, rgba(34, 193, 195, 1) 100%);
+  --background-dark: linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(34, 34, 34, 1) 100%);
+}
+
+.sign {
+  background: var(--background-light); /* Используйте переменную для светлой темы по умолчанию */
+}
+
+/* При смене темы меняйте фон на основе текущей темы */
+.dark .sign {
+  background: var(--background-dark);
+}

@@ -14,9 +14,10 @@ import TopButton from "../components/TopButton/TopButton";
 import AddModalSong from "../components/Modales/AddModalSong";
 import DeleteModalSong from "../components/Modales/DeleteModalSong";
 import EditModalSong from "../components/Modales/EditModalSong";
-// import { fetchSongs } from "../Service/Api";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { addTokenToHeaders } from '../Service/authUser';
+import { fetchSongs } from "../Service/Api";
 
 
 
@@ -71,6 +72,7 @@ function SongsList() {
   const handleSaveEditedSong = async () => {
     try {
       const songIdToEdit = Songdata[editSongIndex]._id; // Assuming each song has an "id" field
+      addTokenToHeaders();
       await axios.put(
         `http://localhost:5000/songs/?_id=${songIdToEdit}`,
         editedSong
@@ -85,18 +87,38 @@ function SongsList() {
   };
 
   //отображение карточек 
+  // useEffect(() => {
+  //   fetchSongs();
+  // }, []);
+
+  // const fetchSongs = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get("http://localhost:5000/songs");
+  //     setSongdata(response.data);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error);
+  //     setError(error);
+  //     setLoading(false);
+  //   }
+  // };
+
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/songs")
-      .then((response) => {
-        setSongdata(response.data);
-        setLoading(false);            //отображение ожидания загрузки
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);            //ошибка загрузки
-      });
+    async function getSongs() {
+      try {
+        setLoading(true);
+        const response = await fetchSongs();
+        setSongdata(response);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading songs:', error);
+        setLoading(false);
+      }
+    }
+    getSongs();
   }, []);
+
 
   //открытие -
   const handleAddModalShow = () => {
@@ -110,6 +132,7 @@ function SongsList() {
   //метод post для добавления новой карточки
   const handleAddSong = async () => {
     try {
+        addTokenToHeaders();
         const response = await axios.post(
         "http://localhost:5000/songs",
         newSong
@@ -117,6 +140,7 @@ function SongsList() {
       const addedSong = response.data;
       setSongdata([...Songdata, addedSong]);  //ответ от сервера
       setNewSong({ artist: "", track: "", year: "", fileUrl: "", coverUrl: "", category: [] });
+      getSongs();
       setShowAddModal(false);
     } catch (error) {
       console.error("Error adding songs:", error);
@@ -147,6 +171,7 @@ function SongsList() {
   const handleDeleteSong = async (index) => {
     try {
       const songDelete = Songdata[index]._id; // удаления карточки по "id"
+      addTokenToHeaders();
       await axios.delete(`http://localhost:5000/songs/?_id=${songDelete}`);
       const updatedSongs = [...Songdata];
       updatedSongs.splice(index, 1);

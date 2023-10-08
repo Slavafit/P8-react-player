@@ -6,22 +6,24 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     // восстановить состояние аутентификации из sessionStorage
-    useEffect(() => {
-      const storedAuth = sessionStorage.getItem("isAuthenticated");
-      if (storedAuth) {
-        setIsAuthenticated(storedAuth === "true");
-      }
-    }, []);
+    // useEffect(() => {
+    //   const storedAuth = sessionStorage.getItem("isAuthenticated");
+    //   if (storedAuth) {
+    //     setIsAuthenticated(storedAuth === "true");
+    //   }
+    // }, []);
 
   const login = () => {
     setIsAuthenticated(true);
-    sessionStorage.setItem("isAuthenticated", "true");
+    // sessionStorage.setItem("isAuthenticated", "true");
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('role');
     setIsAuthenticated(false);
-    sessionStorage.removeItem("isAuthenticated");
+    // sessionStorage.removeItem("isAuthenticated");
   };
 
   return (

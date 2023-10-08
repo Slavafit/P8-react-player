@@ -16,10 +16,14 @@ const authUser = async (email, password) => {
         email,
         password,
       });
-      // Получить JWT-токен из ответа сервера
+      // Получить JWT-токен и прочее из ответа сервера
       const token = response.data.token;
-      // Сохранить токен в localStorage или в памяти приложения
+      const username = response.data.userData.username;
+      const role = response.data.userData.role;
+      // Сохранить токен и остальное в localStorage или в памяти приложения
       localStorage.setItem('token', token);
+      sessionStorage.setItem("username", username);
+      sessionStorage.setItem("role", role);
       // Вернуть успех
       return true;
     }

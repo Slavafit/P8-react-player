@@ -7,14 +7,14 @@ const Home = () => {
 
   return (
     <>
-    <Container >
+    {/* <Container > */}
           {/* <Row> */}
             {/* <Col> */}
               <Player />
             {/* </Col> */}
           {/* </Row> */}
           <TopButton/>
-    </Container>
+    {/* </Container> */}
     </>
   );
 };
