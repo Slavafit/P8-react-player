@@ -30,7 +30,7 @@ class authController {
                 return res.status(400).json({errors: errorMessages });
             }
             const {username, email, password } = req.body;
-            const candidate = await User.findOne({username} || {email});    //ищем пользователя в БД
+            const candidate = await User.findOne({ $or: [{ username }, { email }] });    //ищем пользователя в БД
             if (candidate) {        //если нашли вернули сообщение
                 return res.status(400).json({message: `User with ${username} or ${email} already exists`});
             }
@@ -60,7 +60,7 @@ class authController {
 
         } catch (e) {
             console.log(e)
-            res.status(400).json({message: 'Registration error'})
+            res.status(400).json({message: 'Registration error', error: e.message })
         }
     }
 
@@ -80,7 +80,8 @@ class authController {
             }
             //генерирую токен и отправляю клиенту
             const token = generateAccessToken(user._id, user.roles)
-            return res.json({token})
+            const userData = {username: user.username, role: user.roles[0]}
+            return res.json({token, userData})
         } catch (e) {
             console.log(e)
             res.status(400).json({message: 'Login error'})
@@ -93,6 +94,25 @@ class authController {
             res.json(users)
         } catch (e) {
 
+        }
+    }
+
+    async getUserByUsername(req, res) {
+        try {
+            const { username } = req.query;
+            // console.log("Received getUserById request with:", username);
+            //ищем пользователя в базе
+            const user = await User.findOne({username});    
+       
+            //если не найден, то объект будет пустой и пойдет по условию ниже
+            if (!user) {
+                return res.status(404).json({message: `User with ${username} not found`})
+            }
+            //const users = await User.find()
+            return res.json({user})
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Server error' });
         }
     }
 

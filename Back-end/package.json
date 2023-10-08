@@ -7,7 +7,7 @@
     "start": "nodemon server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "SlavaFit",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

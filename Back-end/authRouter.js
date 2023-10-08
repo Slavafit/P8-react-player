@@ -15,6 +15,8 @@ router.post('/registration', [
 router.post('/login', controller.login)
 
 router.get('/users', roleMiddleware(['ADMIN']), controller.getUsers)
+router.get('/dashboard', roleMiddleware(['ADMIN']), controller.getUsers)
+router.get('/personal', roleMiddleware(['USER']), controller.getUserByUsername)
 // router.get('/songs', controller.getSongsById)
 router.get('/songs', controller.getSongs)
 router.post('/songs',  [
