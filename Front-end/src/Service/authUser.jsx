@@ -21,9 +21,9 @@ const authUser = async (email, password) => {
       const username = response.data.userData.username;
       const role = response.data.userData.role;
       // Сохранить токен и остальное в localStorage или в памяти приложения
-      localStorage.setItem('token', token);
-      sessionStorage.setItem("username", username);
-      sessionStorage.setItem("role", role);
+      localStorage.setItem('token', token)
+      localStorage.setItem('username', username);
+      localStorage.setItem('role', role);
       // Вернуть успех
       return true;
     }

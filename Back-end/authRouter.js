@@ -23,10 +23,10 @@ router.post('/songs',  [
      check('artist', "cannot be empty").notEmpty(),
 ], roleMiddleware(['ADMIN']), controller.postSong)
 router.put('/songs', roleMiddleware(['ADMIN']), controller.updateSongs)
-router.put('/users', roleMiddleware(['ADMIN']), controller.updateUser)
+router.put('/users', roleMiddleware(['ADMIN','USER']), controller.updateUser)
 
 router.delete('/songs', roleMiddleware(['ADMIN']), controller.deleteSongs)
-router.delete('/users', roleMiddleware(['ADMIN']), controller.deleteUser)
+router.delete('/users', roleMiddleware(['ADMIN','USER']), controller.deleteUser)
 
 
 

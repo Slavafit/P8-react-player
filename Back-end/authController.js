@@ -91,8 +91,7 @@ class authController {
     async getUsers(req, res) {
         try {
             const users = await User.find()
-            //res.json(users)
-            res.json("server work")
+            res.json(users)
         } catch (e) {
 
         }
@@ -122,11 +121,12 @@ class authController {
         try {
             const { _id } = req.query;
             const updatedUser = req.body; // обновленные данные из тела запроса
+            // console.log(_id)
+            // console.log(updatedUser)
             //Заменяем найденное новым объектом
             const user = await User.findByIdAndUpdate(_id, updatedUser, { new: true });
-
             if (!user) {
-                return res.status(404).json({ message: `User with ${_id} not updated` });
+                return res.status(404).json({ message: `User not updated` });
             }
             res.json(user); // обновленные данные в ответе
 

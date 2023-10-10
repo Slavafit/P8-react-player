@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -20,9 +19,10 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('role');
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
     setIsAuthenticated(false);
+
     // sessionStorage.removeItem("isAuthenticated");
   };
 

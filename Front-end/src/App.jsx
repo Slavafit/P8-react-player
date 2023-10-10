@@ -10,21 +10,20 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/AdminPanel";
 import Personal from "./components/Profile/Personal";
+import Player from "./components/Player/Player";
 import SideMenu from "./components/SideMenu";
 import { AuthProvider } from "./Service/AuthContext";
 import { ThemeProvider } from "./Service/ThemeProvider";
-import { UserProvider } from "./Service/UserContext";
 import "./app.css";
 
 export const App = () => {
   return (
     <AuthProvider>
       <ThemeProvider >
-        <UserProvider>
           <Router>
             <SideMenu/>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Player />} />
               <Route path="/Contactos" element={<Contactos />} />
               <Route path="/SignIn" element={<SignIn />} />
               <Route path="/SignUp" element={<SignUp />} />
@@ -32,7 +31,6 @@ export const App = () => {
               <Route path="/personal" element={<Personal />} />
             </Routes>
           </Router>
-        </UserProvider>
       </ThemeProvider>
     </AuthProvider>
   );

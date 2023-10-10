@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useCallback } from "react";
-import { ThemeProvider as MuiThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { ThemeProvider as MuiThemeProvider, createTheme } from "@mui/material/styles";
 
 const ThemeContext = createContext();
 

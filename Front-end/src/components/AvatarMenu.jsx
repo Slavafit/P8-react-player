@@ -17,8 +17,8 @@ export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const { logout } = useAuth();
-  const username = sessionStorage.getItem('username');
-  const role = sessionStorage.getItem('role');
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
     const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
