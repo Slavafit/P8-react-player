@@ -29,15 +29,15 @@ const authUser = async (email, password) => {
     }
   } catch (error) {
     // Вернуть ошибку аутентификации
-    const responde = error.response.data.message
-    console.log("Error authUser", responde);
-    showAlert(responde);
+    const response = error.response.data.message
+    console.log("Error authUser", response);
+    showAlert(response);
     return false;
   }
 
-  function showAlert(responde) {
+  function showAlert(response) {
     Swal.fire(
-      `${responde}`,
+      `${response}`,
       'Please, repeat your input',
       'warning'
     )

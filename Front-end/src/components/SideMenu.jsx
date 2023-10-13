@@ -108,7 +108,9 @@ export default function SideMenu() {
             {isAuthenticated && <AvatarMenu />}
           </div>
           <div style={{ marginRight: '10px' }}>
-            <SignInButton />
+            <SignInButton
+            isAuthenticated={isAuthenticated}
+             />
           </div>
           <IconButton
             color="inherit"
@@ -161,8 +163,8 @@ export default function SideMenu() {
         <Divider />
         <List>
           {[
-            { text: 'SignIn', link: '/SignIn' },
-            { text: 'About us', link: '/Contactos' },
+            { text: 'SignIn', link: '/signin' },
+            { text: 'About us', link: '/contactos' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton component={Link} to={item.link}>

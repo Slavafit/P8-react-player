@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,6 +22,10 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { fetchSongs } from "../../Service/Api";
 import ReactPlayer from 'react-player'
+import AddSongToPlaylist from "../Modales/AddSongToPlaylist"
+import { useAuth } from '../../Service/AuthContext';
+import NotAuthModal from '../Modales/NotAuthorized';
+
 
 
 const WallPaper = styled('div')(({ theme }) => ({
@@ -99,6 +103,7 @@ export default function MusicPlayer() {
   const [songs, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const reactPlayerRef = useRef(null);
+  const { isAuthenticated } = useAuth();
   const theme = useTheme();
   const [position, setPosition] = React.useState(32);
   const [paused, setPaused] = React.useState(true);
@@ -106,6 +111,11 @@ export default function MusicPlayer() {
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [openAddSongModal, setOpenAddSongModal] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+  const [existingPlaylists, setExistingPlaylists] = useState([]);
+  const [openNotAuthModal, setOpenNotAuthModal] = useState(false);
+
 
     useEffect(() => {
       async function getData() {
@@ -121,6 +131,8 @@ export default function MusicPlayer() {
       }
       getData();
     }, []);
+
+    
 
     //Генерация случайного индекса при загрузке компонента
     useEffect(() => {
@@ -176,8 +188,24 @@ export default function MusicPlayer() {
   
   const mainIconColor = theme.palette.mode === 'dark' ? '#fff' : '#000';
   const lightIconColor =
-    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
+  theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
+
+    // Обработчик нажатия на иконку добавления песни
+    const handleAddToPlaylistClick = (song) => {
+      if (isAuthenticated) {
+        // console.log(song);
+        setSelectedSong(song);  // Устанавливаем выбранную песню в состояние selectedSong
+        setOpenAddSongModal(true);  // Открываем диалоговое окно для добавления песни
+        // Разрешить авторизованным пользователям добавлять песни в список
+        // Ваша логика добавления песни
+      } else {
+        // Показать модальное окно с предупреждением
+        setOpenNotAuthModal(true);
+      }
+    };
   
+
+    //затемнение экрана во время загрузки
     if (loading) {
     return <Backdrop
     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -322,12 +350,13 @@ export default function MusicPlayer() {
             mt: -2,
           }}>
             <IconButton aria-label="Like">
-              <ThumbUpOffAltIcon fontSize="medium" htmlColor={mainIconColor} />
+            {isAuthenticated && <ThumbUpOffAltIcon fontSize="medium" htmlColor={mainIconColor} />}
           </IconButton>
             <IconButton aria-label="DisLike">
-              <ThumbDownOffAltIcon fontSize="medium" htmlColor={mainIconColor} />
+            {isAuthenticated && <ThumbDownOffAltIcon fontSize="medium" htmlColor={mainIconColor} />}
           </IconButton>
-          <IconButton aria-label="Favorite song">
+          <IconButton aria-label="Song to list"
+                onClick={() => handleAddToPlaylistClick(songs[currentTrackIndex])}>
               <FavoriteBorderRoundedIcon fontSize="large" htmlColor={mainIconColor} />
           </IconButton>
         </Box >
@@ -341,6 +370,16 @@ export default function MusicPlayer() {
         onProgress={handleProgress}
         onDuration={handleDuration}
         />
+          {isAuthenticated && <AddSongToPlaylist
+          open={openAddSongModal}
+          onClose={() => setOpenAddSongModal(false)}
+          selectedSong={selectedSong}
+          existingPlaylists={existingPlaylists}
+          // onPlaylistSelect={handlePlaylistSelect}
+        />}
+      <NotAuthModal
+       open={openNotAuthModal}
+       onClose={() => setOpenNotAuthModal(false)} />
       <WallPaper />
     </Container>
   );

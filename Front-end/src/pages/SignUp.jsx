@@ -12,6 +12,8 @@ import logo from "../assets/images/logo.png";
 import axios from "axios";
 import ReCAPTCHA from 'react-google-recaptcha';
 import Swal from 'sweetalert2';
+import { useNavigate } from "react-router-dom";
+
 
 const WallPaper = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -87,6 +89,7 @@ export default function SignUp() {
 
   const captcha = useRef(null);
   const [captchaValue, setCaptchaValue] = useState(null);
+  const navigate = useNavigate();
 
   
   const handleChange = (e) => {
@@ -195,6 +198,7 @@ export default function SignUp() {
       },
       willClose: () => {
         clearInterval(timerInterval);
+        navigate('/signin');
       }
     }).then((result) => {
       /* Read more about handling dismissals below */
@@ -341,7 +345,7 @@ export default function SignUp() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'end'}}>
-                <Link to="/SignIn" variant="body2">
+                <Link to="/signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

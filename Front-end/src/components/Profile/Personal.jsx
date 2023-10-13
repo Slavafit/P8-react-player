@@ -16,6 +16,7 @@ import { addTokenToHeaders } from "../../Service/authUser";
 import EditUserProfile from "../Modales/EditUserProfile";
 import DeleteUserModal from "../Modales/DeleteUserModal";
 import { useAuth } from "../../Service/AuthContext";
+import Listitem from "../listItem";
 import Swal from 'sweetalert2';
 
 const WallPaper = styled("div")(({ theme }) => ({
@@ -99,21 +100,7 @@ const ProfilePage = () => {
       console.error("Error fetching users:", error);
     }
   };
-
-  const songs = [
-    "Song 1",
-    "Song 2",
-    "Song 3",
-  ];
-
-  //блок модального окна редактирования
-  const handleOpen = () => {
-    setOpen(true);
-  };
   
-  const handleClose = () => {
-    setOpen(false);
-  };
 
     //метод редактирования
     const handleEditUser = async (newUsername, newEmail) => {
@@ -126,14 +113,14 @@ const ProfilePage = () => {
         addTokenToHeaders();
         setLoading(true);
         const response = await axios.put(
-          `http://localhost:5000/users/?_id=${id}`, userData, );
+          `http://localhost:5000/users/?_id=${id}`, userData );
         
         setUsers(response.data);
         let username = response.data.username;
         let email = response.data.email;
         localStorage.setItem('username', username);
-        handleClose();
         setLoading(false);
+        setOpen(false)
         showAlert(username, email)
       } catch (error) {
         setLoading(false);
@@ -143,7 +130,7 @@ const ProfilePage = () => {
 
 
     //блок удаления пользователя
-    const handleDeleteUser = async (user) => {
+    const handleDeleteUser = async () => {
       try {
         const id = users._id
         addTokenToHeaders();
@@ -217,7 +204,7 @@ const ProfilePage = () => {
                   <Button
                     variant="outlined"
                     sx={{ margin: 2 }}
-                    onClick={handleOpen}
+                    onClick={() => setOpen(true)}
                     endIcon={<EditRoundedIcon />}
                   >
                     Edit
@@ -237,20 +224,15 @@ const ProfilePage = () => {
           {/* Блок с песнями */}
           <Grid item xs={12} sm={9}>
             <Widget>
-              <Typography variant="h6" component="h2" sx={{ marginBottom: 2 }}>
-                My Songs
-              </Typography>
-              {songs.map((song, index) => (
-                <div key={index}>
-                  <Typography variant="body1">{song}</Typography>
-                </div>
-              ))}
+              <Listitem
+                userName={username}
+                />
             </Widget>
           </Grid>
         </Grid>
         <EditUserProfile
         editOpen={editOpen}
-        handleClose={handleClose}
+        handleClose={() => setOpen(false)}
         onSubmit={handleEditUser}
         initialUsername={users.username || ""}
         initialEmail={users.email || ""}
@@ -260,7 +242,6 @@ const ProfilePage = () => {
         handleClose={() => setDeleteOpen(false)}
         onDelete={handleDeleteUser}
         />
-
         <WallPaper />
       </Container>
     </>
