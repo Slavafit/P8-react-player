@@ -46,18 +46,7 @@ se realizan respuestas del servidor en caso de acciones erróneas del cliente.
 
 ## Screenshots 📷
 
-<img src="Images/Captura de pantalla 2023-10-19 200329.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 200349.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 200411.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 200428.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 200518.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 200801.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 201734.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 203357.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 203416.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 203513.png" width="250" height="200">
-<img src="Images/Captura de pantalla 2023-10-19 203546.png" width="250" height="200">
-
+<img src="Images/Captura de pantalla 2023-10-19 200329.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 200349.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 200411.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 200428.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 200518.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 200801.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 201734.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 203357.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 203416.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 203513.png" width="250" height="200"><img src="Images/Captura de pantalla 2023-10-19 203546.png" width="250" height="200">
 
 
 ## Stacks 🖥️
@@ -93,8 +82,6 @@ se realizan respuestas del servidor en caso de acciones erróneas del cliente.
 4. en la carpeta Back-end npm start
 5. en la carpeta Frontend npm run dev
 
-## File Structure 📁
-
 
 ## Next Steps 🔜
 aplicación de la contabilidad de los gustos y disgustos. Búsqueda de canciones por categoría. 
@@ -102,6 +89,3 @@ aplicación de la contabilidad de los gustos y disgustos. Búsqueda de canciones
 ## Author 👨‍💻
 
 | [<img src="https://avatars.githubusercontent.com/u/132560447?v=4" width=100><br><sub>Viacheslav Fitlin</sub>](https://github.com/Slavafit) |
-| :---: | :---: | :---: | :---: |
-
-
