@@ -46,7 +46,18 @@ se realizan respuestas del servidor en caso de acciones erróneas del cliente.
 
 ## Screenshots 📷
 
-<img src="Campturas BootCamp/Captura de pantalla 2023-08-07 091818.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 200329.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 200349.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 200411.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 200428.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 200518.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 200801.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 201734.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 203357.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 203416.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 203513.png" width="250" height="200">
+<img src="Images/Captura de pantalla 2023-10-19 203546.png" width="250" height="200">
+
 
 
 ## Stacks 🖥️
@@ -63,31 +74,34 @@ se realizan respuestas del servidor en caso de acciones erróneas del cliente.
 ● Zoom
 
 ## Technologies and Tools 🔨
-<div>  
+<div align="center">  
+<a href="https://reactjs.org/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/react-original-wordmark.svg" alt="React" height="50" /></a>  
+<a href="https://getbootstrap.com/docs/3.4/javascript/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/bootstrap-plain.svg" alt="Bootstrap" height="50" /></a>  
+<a href="https://www.javascript.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/javascript-original.svg" alt="JavaScript" height="50" /></a>  
+<a href="https://mui.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/mui.png" alt="Material UI" height="50" /></a>  
+<a href="https://www.figma.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/figma-icon.svg" alt="Figma" height="50" /></a>  
+<a href="https://nodejs.org/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/nodejs-original-wordmark.svg" alt="Node.js" height="50" /></a>  
+<a href="https://www.mongodb.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/mongodb-original-wordmark.svg" alt="MongoDB" height="50" /></a>  
 <a href="https://github.com/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/git-scm-icon.svg" alt="Git" height="50" /></a>  
-<a href="https://dotnet.microsoft.com/download" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/dotnetcore.png" alt=".Net Core" height="50" /></a>  
-
 </div>
 
 ## Installation Process ⬆️
 
-1. Clone the GitHub repository: https://github.com/miguelcidoncha/APIWeb
+1. Clone the GitHub repository: https://github.com/Slavafit/P8-react-player.git
 2. Open the file using Microsoft Visual Studio 2022.
-3. Open View/Server Explorer and add the connection to your computer using SQL Server.
-4. In appsettings.json, add your SQL Server connection under "ServiceContext". Obtain information from properties.
-5. Compile the code from Microsoft Visual Studio 2022.
-6. Once installed, in Swagger, to add content, you need to enter the Administrator 1 query: Username (Equipo 1) and password (BootCamp).
-7. Create, modify, and delete content in Swagger.
-8. View the stored data in the SQL Server tables.
+3. en consola acceder a la carpeta del proyecto, npm install
+4. en la carpeta Back-end npm start
+5. en la carpeta Frontend npm run dev
 
 ## File Structure 📁
 
 
 ## Next Steps 🔜
-For the future, we would like to be able to add images to visually complement the products added. It would also be interesting to differentiate between types of customers/users, whether they are individuals or businesses/companies. Allowing users to create a profile to access various promotions or discounts would be beneficial as well. Similarly, we aim to configure the SQL Server to send purchase confirmations to users via email. Lastly, we plan to work on the front-end to create a web page that replaces the Swagger interface and link it with the database.
+aplicación de la contabilidad de los gustos y disgustos. Búsqueda de canciones por categoría. 
 
 ## Author 👨‍💻
 
-| [<img src="https://avatars.githubusercontent.com/u/132567624?v=4" width=100><br><sub>Francisco Manuel Nieto</sub>](https://github.com/franciscomanuelnietogarcia) | [<img src="https://avatars.githubusercontent.com/u/133955831?v=4" width=100><br><sub>Isabel Lozano</sub>](https://github.com/isabellozano37) | [<img src="https://avatars.githubusercontent.com/u/132560447?v=4" width=100><br><sub>Viacheslav Fitlin</sub>](https://github.com/Slavafit) | [<img src="https://avatars.githubusercontent.com/u/132567398?v=4" width=100><br><sub>Miguel Cidoncha</sub>](https://github.com/miguelcidoncha) |
+| [<img src="https://avatars.githubusercontent.com/u/132560447?v=4" width=100><br><sub>Viacheslav Fitlin</sub>](https://github.com/Slavafit) |
 | :---: | :---: | :---: | :---: |
+
 
