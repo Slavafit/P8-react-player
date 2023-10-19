@@ -1,11 +1,48 @@
 <p align="center">
-  <img src="Campturas BootCamp/Captura de pantalla 2023-08-07 100403.png" width="600" height="250">
+  <img src="Images/Logo.png" width="250" height="250">
 </p>
 
 
 ## Project Description 🚀
 
-This project aimed to create a database and a REST API. Its goal is to develop a comprehensive management system that facilitates interaction between suppliers and users/customers. Suppliers will be able to query, add, modify, and delete product records in their catalog, as well as manage customer data to whom they provide services. Additionally, they can check product stock and filter products by brands. Brand management will also be available. On the other hand, customers will have the ability to place and view their orders through the Swagger interface. Suppliers, in turn, will be able to access placed orders and update their status to mark them as delivered and paid. The system will enable a smooth and efficient interaction between suppliers and customers, enhancing service quality and optimizing inventory and order management processes.
+Cloud Music es una aplicación para escuchar música. En la página principal puedes buscar y escuchar la canción que has encontrado. Al registrarse el usuario recibirá información sobre su nombre de usuario y contraseña, no la pierda. Los usuarios registrados pueden crear sus propias listas, también pueden añadir sus canciones favoritas a estas listas. En su gabinete personal puede modificar sus datos personales o eliminar su cuenta. También puede editar y borrar sus listas de canciones.
+
+Se implementan las siguientes funciones:
+frontend:
+hacer página de login.
+hacer página de registro.
+hacer comprobaciones del lado del cliente en la página de inicio de sesión.
+hacer comprobaciones del lado del cliente en la página de registro
+página de aplicación.
+página de perfil y administración
+añadir funciones de registro de usuarios
+añadir la posibilidad de añadir, editar y borrar canciones para el administrador.
+diferentes géneros disponibles
+utilizar Backdrop durante la descarga
+disponibilidad de botones de control del reproductor.
+al pasar el cursor por encima de los botones, aparece información sobre herramientas
+posibilidad de ver el nombre del artista y el título de la pista.
+visualización del tiempo de pista y del progreso de la reproducción.
+implementación de las funciones de reproducción de una pista y reproducción aleatoria.
+visualización de mensajes informativos: al registrarse, al introducir datos incorrectos en la página de inicio de sesión, al cambiar los datos de usuario.
+Función de búsqueda de canciones por artista y nombre de pista.
+posibilidad de escuchar una canción a partir de la búsqueda.
+posibilidad de crear, modificar y eliminar su lista
+posibilidad de añadir canciones a su lista.
+responsabilidad de la página
+cambio de tema: oscuro y claro
+en la ventana de búsqueda están disponibles las respuestas del servidor, en caso de que no se encuentre la canción deseada o el usuario haya realizado una petición vacía.
+
+backend:
+utilizado por los controles al registrar usuarios.
+están disponibles diferentes roles de usuario.
+se utiliza token
+envío de notificación al usuario en caso de registro exitoso a su correo electrónico.
+funciones implementadas de recepción, adición, edición y eliminación (CRUD): usuarios, canciones, listas de canciones.
+se muestra la información relevante para el usuario. 
+el usuario no puede ver la información de otros usuarios.
+función para buscar canciones por artista y nombre de pista.
+se realizan respuestas del servidor en caso de acciones erróneas del cliente.
 
 ## Screenshots 📷
 
