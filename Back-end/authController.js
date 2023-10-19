@@ -81,7 +81,7 @@ class authController {
             }
             //генерирую токен и отправляю клиенту
             const token = generateAccessToken(user._id, user.roles)
-            const userData = {username: user.username, role: user.roles[0]}
+            const userData = {userId: user._id, username: user.username, role: user.roles[0]}
             return res.json({token, userData})
         } catch (e) {
             console.log(e)
@@ -101,7 +101,7 @@ class authController {
     async getUserByUsername(req, res) {
         try {
             const { username } = req.query;
-            // console.log("Received getUserById request with:", username);
+            // console.log("Received getUserByUsername request with:", username);
             //ищем пользователя в базе
             const user = await User.findOne({username});    
        
@@ -118,6 +118,24 @@ class authController {
     }
 
     // Обработчик для изменения пользователя по Id
+    // async updateUser(req, res) {
+    //     try {
+    //         const { _id } = req.query;
+    //         const updatedUser = req.body; // обновленные данные из тела запроса
+    //         // console.log(_id)
+    //         // console.log(updatedUser)
+    //         //Заменяем найденное новым объектом
+    //         const user = await User.findByIdAndUpdate(_id, updatedUser, { new: true });
+    //         if (!user) {
+    //             return res.status(404).json({ message: `User not updated` });
+    //         }
+    //         res.json(user); // обновленные данные в ответе
+
+    //     } catch (e) {
+    //         console.log(e)
+    //         res.status(500).json({ message: 'Server error' });
+    //     }
+    // }
     async updateUser(req, res) {
         try {
             const { _id } = req.query;
@@ -129,6 +147,9 @@ class authController {
             if (!user) {
                 return res.status(404).json({ message: `User not updated` });
             }
+            // Теперь, обновляем имя пользователя во всех связанных плейлистах
+            const playlists = await Playlist.updateMany({ userName: _id }, { userName: updatedUser.userName });
+            console.log(playlists)
             res.json(user); // обновленные данные в ответе
 
         } catch (e) {
@@ -182,11 +203,34 @@ class authController {
             res.status(500).json({message: 'getSongs error'})
         }
     }
+    async getSong(req, res) {
+        try {
+            const { search } = req.query;
+            if (!search) {
+                return res.status(400).json({ message: 'Search query is required' });
+            }
+            // console.log("Received Search request with: ",search);
+            const songs = await Song.find({
+                $or: [
+                    { artist: { $regex: search, $options: 'i' } }, // Поиск по полю artist, игнорируя регистр
+                    { track: { $regex: search, $options: 'i' } }  // Поиск по полю title, игнорируя регистр
+                ]
+            });
+            //ответ на клиент если не найдено
+            if (songs.length === 0) {
+                return res.status(404).json({ message: 'No results found' });
+            }
+            res.json(songs)
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({message: 'Search error'})
+        }
+    }
 
     async getSongsById(req, res) {
         try {
             const { _id } = req.query;
-            console.log("Received findById request with Id:", _id);
+            // console.log("Received findById request with Id:", _id);
             const song = await Song.findById(_id);
     
             if (!song) {
@@ -264,28 +308,28 @@ class authController {
         }
     }
 
-    async getPlaylist(req, res) {
-        try {
-            const { userName } = req.query;
-            // console.log(`Received request with ${userName}`);
-            const lists = await Playlist.find({ userName: userName });
+    // async getPlaylist(req, res) {
+    //     try {
+    //         const { _id } = req.query;
+    //         console.log(`Received request with ${_id}`);
+    //         const lists = await Playlist.find({userId: _id });
     
-            if (!lists) {
-                return res.status(404).json({ message: `Playlist not found` });
-            }
-            res.json(lists)
-        } catch (e) {
-            console.log(e)
-            res.status(500).json({message: 'getPlayList error'})
-        }
-    }
+    //         if (!lists) {
+    //             return res.status(404).json({ message: `Playlist not found` });
+    //         }
+    //         res.json(lists)
+    //     } catch (e) {
+    //         console.log(e)
+    //         res.status(500).json({message: 'getPlayList error'})
+    //     }
+    // }
 
 
     async postPlaylist(req, res) {
         try {
-          const { userName } = req.query;
+          const { _id } = req.query;
           const { listName } = req.body;
-          const existingPlaylist = await Playlist.findOne({listName: listName});
+          const existingPlaylist = await Playlist.findOne({ _id, listName });
 
           if (existingPlaylist) {
             // Если плейлист с таким именем уже существует, отправляем ошибку клиенту
@@ -293,7 +337,7 @@ class authController {
           }
       
           // Если плейлист с таким именем не существует, создаем новый плейлист
-          const newPlaylist = new Playlist({ userName: userName, listName: listName, songs: [] });
+          const newPlaylist = new Playlist({ userId: _id, listName: listName, songs: [] });
           await newPlaylist.save();
       
           // Отправляем сообщение об успешном создании
@@ -302,7 +346,7 @@ class authController {
           console.log(e);
           res.status(500).json({ message: 'Server error' });
         }
-      }
+    }
       
 
     // Обработчик для изменения листа по Id
@@ -324,11 +368,11 @@ class authController {
         }
     }
     
-    // Обработчик для удаления PlayList по Id
+    // Обработчик для удаления PlayList по listName
     async deletePlaylist(req, res) {
         try {
-            const { _id } = req.query; // query для получения _id из параметров
-            // console.log("Received deletePlaylist request with Id:", _id);
+            const { _id } = req.query; // query для получения id из параметров
+            // console.log("Received deletePlaylist request with _id:", _id);
             const playlist = await Playlist.findById(_id); // Используйте _id напрямую
             if (!playlist) {
                 return res.status(404).json({ message: `Playlist not found` });
@@ -338,6 +382,67 @@ class authController {
             await playlist.deleteOne({_id});
         
             return res.json({ message: `playlist deleted` });
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
+
+    
+    async getListWithSongs(req, res) {
+        try {
+            const { _id } = req.query;
+            // console.log(`Received request getListWithSongs with ${_id}`);
+            // Ищем плейлист пользователя по _id
+            const playlists = await Playlist.find({userId: _id});
+            if (!playlists || playlists.length === 0) {
+                return res.status(404).json({ message: `Playlists not found for user ` });
+            }
+            // Создаем массив, в котором будем хранить все плейлисты с песнями и их деталями
+            const allPlaylistsWithSongs = [];
+            for (const playlist of playlists) {
+                const playlistWithDetails = {
+                    _id: playlist._id,
+                    listName: playlist.listName,
+                    songs: []
+                };
+
+                const songsInList = playlist.songs;
+                // Получаем данные песен по id и добавляем их в массив плейлиста
+                for (const songId of songsInList) {
+                    const song = await Song.findById(songId);
+                    playlistWithDetails.songs.push(song);
+                }
+
+                allPlaylistsWithSongs.push(playlistWithDetails);
+            }
+            //Возврат на клиент массива плейлистов с песнями и их деталями
+            res.json({ playlists: allPlaylistsWithSongs })
+        } catch (e) {
+            console.log(e)
+            res.status(500).json({message: 'getPlayList with details error'})
+        }
+    }
+
+    // Обработчик для удаления Song из Playlist
+    async deleteSongFromList(req, res) {
+        try {
+            const { playlistId, songId } = req.query; // query для получения id из параметров
+            // console.log("Received delete song form Playlist request: ", playlistId, "song id: ", songId);
+            const playlist = await Playlist.findById(playlistId); // Используйте _id напрямую
+            if (!playlist) {
+                return res.status(404).json({ message: `Playlist not found` });
+            }
+            if (!songId) {
+                return res.status(400).json({ message: 'songId is required' });
+            }    
+            // Удаляем песню из массива songs в плейлисте
+            const songIndex = playlist.songs.indexOf(songId);
+            if (songIndex !== -1) {
+                playlist.songs.splice(songIndex, 1);
+                await playlist.save(); // Сохраняем обновленный плейлист
+            }
+        return res.json({ message: `Song deleted from the playlist` })
         } catch (e) {
             console.log(e)
             res.status(500).json({ message: 'Server error' });

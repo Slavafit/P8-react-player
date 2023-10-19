@@ -18,7 +18,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { addTokenToHeaders } from '../Service/authUser';
 import { fetchSongs } from "../Service/Api";
-
+import Swal from 'sweetalert2';
 
 
 
@@ -86,38 +86,38 @@ function SongsList() {
     }
   };
 
-  //отображение карточек 
-  // useEffect(() => {
-  //   fetchSongs();
-  // }, []);
-
-  // const fetchSongs = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await axios.get("http://localhost:5000/songs");
-  //     setSongdata(response.data);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching users:", error);
-  //     setError(error);
-  //     setLoading(false);
-  //   }
-  // };
-
+  // отображение карточек 
   useEffect(() => {
-    async function getSongs() {
-      try {
-        setLoading(true);
-        const response = await fetchSongs();
-        setSongdata(response);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error loading songs:', error);
-        setLoading(false);
-      }
-    }
-    getSongs();
+    fetchSongs();
   }, []);
+
+  const fetchSongs = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:5000/songs");
+      setSongdata(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   async function getSongs() {
+  //     try {
+  //       setLoading(true);
+  //       const response = await fetchSongs();
+  //       setSongdata(response);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error('Error loading songs:', error);
+  //       setLoading(false);
+  //     }
+  //   }
+  //   getSongs();
+  // }, []);
 
 
   //открытие -
@@ -138,10 +138,12 @@ function SongsList() {
         newSong
       );
       const addedSong = response.data;
+      // console.log(addedSong);
       setSongdata([...Songdata, addedSong]);  //ответ от сервера
       setNewSong({ artist: "", track: "", year: "", fileUrl: "", coverUrl: "", category: [] });
-      getSongs();
-      setShowAddModal(false);
+      handleAddModalClose();
+      fetchSongs();
+      showAlert(addedSong.message);
     } catch (error) {
       console.error("Error adding songs:", error);
     }
@@ -180,6 +182,14 @@ function SongsList() {
       console.error("Error deleting songs:", error);
     }
   };
+
+  function showAlert(data) {
+    Swal.fire(
+      `${data}`,
+      'successfully',
+      'warning'
+    )
+  }  
 
   //блок ошибок загрузки
   if (loading) {
@@ -221,7 +231,7 @@ function SongsList() {
                 <Card.Text>Year: {value.year}</Card.Text>
               </Card.Body>
               <ListGroup className="list-group-flush">
-                <ListGroup.Item>FileUrl: {value.fileUrl}</ListGroup.Item>
+                {/* <ListGroup.Item>FileUrl: {value.fileUrl}</ListGroup.Item> */}
                 <ListGroup.Item>
                   Category: {value.category ? value.category.join(', ') : ''}
                 </ListGroup.Item>

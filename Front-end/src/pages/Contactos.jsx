@@ -11,7 +11,8 @@ const Contactos = () => {
               <h2 className="display-4 mb-4">About us</h2>
             </div>
             <p className="lead">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam accusantium dicta maxime recusandae blanditiis harum sit aperiam, repellat quisquam, exercitationem dolorem expedita itaque iusto. Accusamus molestiae quibusdam assumenda voluptate est.
+            Cloud Music is an app for listening to music. On the main page you can search and listen to the song you have found. When registering the user will be sent information about his login and password, do not lose it. For registered users you can create your own lists, you can also add your favorite songs to these lists. In your personal cabinet you can change your personal data or delete your account. You can also edit and delete your song lists. <br />
+            Public listening is prohibited! These audio files are for personal use only.
             </p>
           </Col>
         </Row>

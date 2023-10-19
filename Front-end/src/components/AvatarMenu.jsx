@@ -11,6 +11,7 @@ import Logout from '@mui/icons-material/Logout';
 import { purple } from '@mui/material/colors';
 import { useAuth } from "../Service/AuthContext";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AccountMenu() {
@@ -19,6 +20,8 @@ export default function AccountMenu() {
   const { logout } = useAuth();
   const username = localStorage.getItem('username');
   const role = localStorage.getItem('role');
+  const navigate = useNavigate();
+
     const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -90,17 +93,23 @@ export default function AccountMenu() {
           </MenuItem>
         )}
 
-        {role === 'USER' && ( // Проверяем, если роль - USER
+        {/* {role === 'USER' && ( // Проверяем, если роль - USER
           <MenuItem onClick={handleClose}>
             <Link to="/personal" style={{ textDecoration: 'none', color: 'inherit' }}>
               Personal
             </Link>
           </MenuItem>
-        )}
+        )} */}
+          <MenuItem onClick={handleClose}>
+            <Link to="/personal" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Personal
+            </Link>
+          </MenuItem>
         <Divider />
          <MenuItem onClick={() => {
             handleClose();
             logout();
+            navigate('/');
             }}>
           <ListItemIcon>
             <Logout fontSize="small" />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,6 +18,10 @@ import VolumeOffRoundedIcon from '@mui/icons-material/VolumeOffRounded';
 import VolumeMuteRoundedIcon from '@mui/icons-material/VolumeMuteRounded';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded';
+import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
+import ShuffleOnRoundedIcon from '@mui/icons-material/ShuffleOnRounded';
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { fetchSongs } from "../../Service/Api";
@@ -25,6 +29,7 @@ import ReactPlayer from 'react-player'
 import AddSongToPlaylist from "../Modales/AddSongToPlaylist"
 import { useAuth } from '../../Service/AuthContext';
 import NotAuthModal from '../Modales/NotAuthorized';
+import axios from "axios";
 
 
 
@@ -64,11 +69,10 @@ const WallPaper = styled('div')(({ theme }) => ({
   },
 }));
 
-
 const Widget = styled('div')(({ theme }) => ({
   padding: 15,
   borderRadius: 15,
-  width: 400,
+  width: 350,
   maxWidth: '100%',
   margin: 'auto',
   position: 'relative',
@@ -76,10 +80,12 @@ const Widget = styled('div')(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.4)',
   backdropFilter: 'blur(40px)',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
 }));
 
 const CoverImage = styled('div')({
   width: '100%',
+  height: '100%',
   Maxheight: '100%',
   objectFit: 'cover',
   overflow: 'hidden',
@@ -98,61 +104,89 @@ const TinyText = styled(Typography)({
   letterSpacing: 0.2,
 });
 
-export default function MusicPlayer() {
+export default function MusicPlayer({ playlists, selectedList }) {
   
-  const [songs, setData] = useState([]);
+  const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const reactPlayerRef = useRef(null);
-  const { isAuthenticated } = useAuth();
+  const { auth } = useAuth();
   const theme = useTheme();
   const [position, setPosition] = React.useState(32);
   const [paused, setPaused] = React.useState(true);
   const [volume, setVolume] = React.useState(30);
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
+  const [repeat, setRepeat] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [openAddSongModal, setOpenAddSongModal] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
-  const [existingPlaylists, setExistingPlaylists] = useState([]);
   const [openNotAuthModal, setOpenNotAuthModal] = useState(false);
-
+  
+  // console.log("Player: ", songs);
+    // useEffect(() => {
+    //   async function getData() {
+    //     try {
+    //       setLoading(true);
+    //       const songsData = await fetchSongs();
+    //       setSongs(songsData);
+    //       setLoading(false);
+    //     } catch (error) {
+    //       console.error('Error loading songs:', error);
+    //       setLoading(false);
+    //     }
+    //   }
+    //   getData();
+    // }, []);
 
     useEffect(() => {
-      async function getData() {
-        try {
-          setLoading(true);
-          const songsData = await fetchSongs();
-          setData(songsData);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error loading songs:', error);
-          setLoading(false);
-        }
-      }
-      getData();
+      fetchSongs();
     }, []);
+
+    const fetchSongs = async ()  => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:5000/songs');
+        setSongs(response.data);
+        setLoading(false);
+      } catch (e) {
+        console.error("Error fetching data:", e);
+      }
+    }
 
     
 
-    //Генерация случайного индекса при загрузке компонента
-    useEffect(() => {
-      const randomIndex = Math.floor(Math.random() * songs.length);
-      setCurrentTrackIndex(randomIndex);
-    }, [songs]);
+    const handlePreviousTrack = () => {
+      if (shuffle) {
+        // Если включен случайный режим, выберите случайную песню вместо предыдущей
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * songs.length);
+        } while (randomIndex === currentTrackIndex); // Убедитесь, что это не текущая песня
+        setCurrentTrackIndex(randomIndex);
+      } else {
+        // В противном случае переключитесь на предыдущий трек (если есть)
+        if (currentTrackIndex > 0) {
+          setCurrentTrackIndex(currentTrackIndex - 1);
+        }
+      }
+    };
 
-  const handlePreviousTrack = () => {
-    if (currentTrackIndex > 0) {
-      setCurrentTrackIndex(currentTrackIndex - 1);
-      reactPlayerRef.current.seekTo(0);
-    }
-  };
-
-  const handleNextTrack = () => {
-    if (currentTrackIndex < songs.length - 1) {
-      setCurrentTrackIndex(currentTrackIndex + 1);
-      reactPlayerRef.current.seekTo(0);
-    }
-  };
+    const handleNextTrack = () => {
+      if (shuffle) {
+        // Если включен случайный режим, выберите случайную песню вместо следующей
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * songs.length);
+        } while (randomIndex === currentTrackIndex); // Убедитесь, что это не текущая песня
+        setCurrentTrackIndex(randomIndex);
+      } else {
+        // В противном случае переключитесь на следующий трек (если есть)
+        if (currentTrackIndex < songs.length - 1) {
+          setCurrentTrackIndex(currentTrackIndex + 1);
+        }
+      }
+    };
 
   const handleSeek = (newValue) => {
     setPosition(newValue);
@@ -171,39 +205,73 @@ export default function MusicPlayer() {
     setMuted(!muted);
   };
   
-  
   const handleDuration = (d) => {
     setDuration(d);
   };
 
   const seeking = false; // Установите это значение в true, когда начинаете перемотку
-
   function formatDuration(value) {
     const minutes = Math.floor(value / 60);
     const seconds = Math.floor(value % 60);
     return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   }
 
+  //кнопка репит
+  const handleRepeatToggle = () => {
+    setRepeat(!repeat);
+  };
+
+  const handleEnded = () => {
+    if (repeat) {
+      reactPlayerRef.current.seekTo(0);
+      setPaused(false);
+    } else {
+      if (shuffle) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * songs.length);
+        } while (randomIndex === currentTrackIndex);
+        setCurrentTrackIndex(randomIndex);
+      } else {
+        if (currentTrackIndex < songs.length - 1) {
+          handleNextTrack();
+        }
+      }
+    }
+  };
   
-  
+  //функция случайного выбора
+  const handleShuffleToggle = () => {
+    setShuffle(!shuffle);
+  };
+
+
   const mainIconColor = theme.palette.mode === 'dark' ? '#fff' : '#000';
   const lightIconColor =
   theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
 
     // Обработчик нажатия на иконку добавления песни
     const handleAddToPlaylistClick = (song) => {
-      if (isAuthenticated) {
-        // console.log(song);
+      if (auth) {
         setSelectedSong(song);  // Устанавливаем выбранную песню в состояние selectedSong
         setOpenAddSongModal(true);  // Открываем диалоговое окно для добавления песни
-        // Разрешить авторизованным пользователям добавлять песни в список
-        // Ваша логика добавления песни
       } else {
         // Показать модальное окно с предупреждением
         setOpenNotAuthModal(true);
       }
     };
-  
+
+
+    // Используем useEffect для мониторинга изменений selectedList
+  useEffect(() => {
+    if (selectedList) {
+      // console.log("selectedList:", selectedList);
+      // console.log("songs: ", songs);
+      setSongs(selectedList);
+    } else {
+      setSongs([]); // Если selectedList отсутствует, сбросить список песен
+    }
+  }, [selectedList]);
 
     //затемнение экрана во время загрузки
     if (loading) {
@@ -218,12 +286,13 @@ export default function MusicPlayer() {
     <Container theme={theme} component="main" maxWidth="xs">
       <Widget>
       <CssBaseline />
+      {songs[currentTrackIndex] && (
         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <CoverImage>
-            <img
-              alt={songs[currentTrackIndex].artist}
-              src={songs[currentTrackIndex].coverUrl}
-            />
+              <img
+                alt={songs[currentTrackIndex].artist}
+                src={songs[currentTrackIndex].coverUrl}
+              />
           </CoverImage>
           <Box sx={{ mt: 1.5, minWidth: 0, textAlign: 'left' }}>
             <Typography noWrap>
@@ -234,6 +303,7 @@ export default function MusicPlayer() {
             </Typography>
           </Box>
         </Box>
+        )}
         <Slider
           aria-label="time-indicator"
           size="small"
@@ -288,10 +358,18 @@ export default function MusicPlayer() {
             mt: -1,
           }}
         >
-          <IconButton aria-label="previous song" onClick={handlePreviousTrack}>
+            <IconButton aria-label="Repeat" title="Repeat song" onClick={handleRepeatToggle}>
+              {repeat ? (
+                <RepeatOneRoundedIcon fontSize="small" htmlColor={mainIconColor} />
+              ) : (
+                <RepeatRoundedIcon fontSize="small" htmlColor={mainIconColor} />
+              )}
+          </IconButton>
+          <IconButton aria-label="previous song" title="Previous song" onClick={handlePreviousTrack}>
             <SkipPreviousRoundedIcon fontSize="large" htmlColor={mainIconColor} />
           </IconButton>
           <IconButton
+            title="Play/pause"
             aria-label={paused ? 'play' : 'pause'}
             onClick={() => setPaused(!paused)}
           >
@@ -304,8 +382,15 @@ export default function MusicPlayer() {
               <PauseRounded sx={{ fontSize: '3rem' }} htmlColor={mainIconColor} />
             )}
           </IconButton>
-          <IconButton aria-label="next song" onClick={handleNextTrack}>
+          <IconButton aria-label="next song" title="Next song" onClick={handleNextTrack}>
             <SkipNextRoundedIcon fontSize="large" htmlColor={mainIconColor} />
+          </IconButton>
+          <IconButton aria-label="Shuffle" title="Random playing" onClick={handleShuffleToggle}>
+            {shuffle ? (
+              <ShuffleOnRoundedIcon fontSize="small" htmlColor={mainIconColor} />
+            ) : (
+              <ShuffleRoundedIcon fontSize="small" htmlColor={mainIconColor} />
+            )}
           </IconButton>
         </Box>
         <Stack spacing={2} direction="row" sx={{ mb: 1, px: 1 }} alignItems="center">
@@ -349,13 +434,13 @@ export default function MusicPlayer() {
             justifyContent: 'space-between',
             mt: -2,
           }}>
-            <IconButton aria-label="Like">
-            {isAuthenticated && <ThumbUpOffAltIcon fontSize="medium" htmlColor={mainIconColor} />}
+            <IconButton aria-label="Like" title='Like'>
+            {auth && <ThumbUpOffAltIcon fontSize="medium" htmlColor={mainIconColor} />}
           </IconButton>
-            <IconButton aria-label="DisLike">
-            {isAuthenticated && <ThumbDownOffAltIcon fontSize="medium" htmlColor={mainIconColor} />}
+            <IconButton aria-label="DisLike" title='DisLike'>
+            {auth && <ThumbDownOffAltIcon fontSize="medium" htmlColor={mainIconColor} />}
           </IconButton>
-          <IconButton aria-label="Song to list"
+          <IconButton aria-label="Song to list" title='Add to list'
                 onClick={() => handleAddToPlaylistClick(songs[currentTrackIndex])}>
               <FavoriteBorderRoundedIcon fontSize="large" htmlColor={mainIconColor} />
           </IconButton>
@@ -363,19 +448,19 @@ export default function MusicPlayer() {
       </Widget>
        <ReactPlayer
         ref={reactPlayerRef}
-        url={songs[currentTrackIndex].fileUrl}
+        url={songs[currentTrackIndex] ? songs[currentTrackIndex].fileUrl : null}
         playing={!paused}
         volume={muted ? 0 : volume / 100}
         // controls={true}
         onProgress={handleProgress}
         onDuration={handleDuration}
+        onEnded={handleEnded} // Обработчик завершения трека
         />
-          {isAuthenticated && <AddSongToPlaylist
+          {auth && <AddSongToPlaylist
           open={openAddSongModal}
           onClose={() => setOpenAddSongModal(false)}
           selectedSong={selectedSong}
-          existingPlaylists={existingPlaylists}
-          // onPlaylistSelect={handlePlaylistSelect}
+          playlists={playlists}
         />}
       <NotAuthModal
        open={openNotAuthModal}

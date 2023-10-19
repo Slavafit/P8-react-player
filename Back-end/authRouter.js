@@ -22,10 +22,12 @@ router.post('/songtolist', controller.postSongToList)
 
 router.get('/users', roleMiddleware(['ADMIN']), controller.getUsers)
 router.get('/dashboard', roleMiddleware(['ADMIN']), controller.getUsers)
-router.get('/personal', roleMiddleware(['USER']), controller.getUserByUsername)
+router.get('/personal', authMiddleware, controller.getUserByUsername)
 router.get('/songs', controller.getSongs)
+router.get('/song', controller.getSong)
 // router.get('/playlist', authMiddleware, controller.getPlaylistById)
-router.get('/playlist', authMiddleware, controller.getPlaylist)
+// router.get('/playlist', authMiddleware, controller.getPlaylist)
+router.get('/songslist', authMiddleware, controller.getListWithSongs)
 
 router.put('/songs', roleMiddleware(['ADMIN']), controller.updateSongs)
 router.put('/users', roleMiddleware(['ADMIN','USER']), controller.updateUser)
@@ -34,6 +36,7 @@ router.put('/playlist', authMiddleware, controller.updatePlaylist)
 router.delete('/users', roleMiddleware(['ADMIN','USER']), controller.deleteUser)
 router.delete('/songs', roleMiddleware(['ADMIN']), controller.deleteSongs)
 router.delete('/playlist', authMiddleware, controller.deletePlaylist)
+router.delete('/songslist', authMiddleware, controller.deleteSongFromList)
 
 
 

@@ -28,7 +28,6 @@ import SignInButton from './SignInButton';
 import { useAuth } from "../Service/AuthContext";
 import SwitchTheme from "./switch";
 
-
 const drawerWidth = 200;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -79,19 +78,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function SideMenu() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);   
-  const { isAuthenticated } = useAuth();
+  const { auth } = useAuth();
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
 
   return (
-    <Box sx={{ display: 'flex'}} >
+    <>
+   <Box sx={{ flexGrow: 1 }} >
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar sx={{ ml: 5 }}>
@@ -105,18 +98,18 @@ export default function SideMenu() {
           <SwitchTheme/>
 
           <div style={{ marginRight: '10px' }}>
-            {isAuthenticated && <AvatarMenu />}
+            {auth && <AvatarMenu />}
           </div>
           <div style={{ marginRight: '10px' }}>
             <SignInButton
-            isAuthenticated={isAuthenticated}
+            auth={auth}
              />
           </div>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="end"
-            onClick={handleDrawerOpen}
+            onClick={() => setOpen(true)}
             sx={{ ...(open && { display: 'none' }) }}
             >
             <MenuIcon />
@@ -139,7 +132,7 @@ export default function SideMenu() {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={() => setOpen(false)}>
             {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
@@ -148,7 +141,7 @@ export default function SideMenu() {
         <List>
           {[
             { text: 'Home', link: '/' },
-            { text: 'Collection', link: '/starred' },
+            { text: 'Collection', link: '/personal' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton component={Link} to={item.link}>
@@ -163,7 +156,7 @@ export default function SideMenu() {
         <Divider />
         <List>
           {[
-            { text: 'SignIn', link: '/signin' },
+            { text: 'Sign In', link: '/signin' },
             { text: 'About us', link: '/contactos' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
@@ -178,5 +171,6 @@ export default function SideMenu() {
         </List>
       </Drawer>
     </Box>
+    </>
   );
 }

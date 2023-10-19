@@ -65,6 +65,7 @@ const Widget = styled('div')(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.4)',
   backdropFilter: 'blur(40px)',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
 }));
 
 
@@ -79,18 +80,16 @@ const TinyText = styled(Typography)({
 });
 
 export default function SignIn() {
-  const theme = useTheme();
-  // const isAuthenticated = useEffect();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
-
+  const theme = useTheme();
   
     useEffect(() => {
-    // При монтировании компонента, проверьте, есть ли сохраненные данные в localStorage
+    // есть ли сохраненные данные в localStorage
     const storedEmail = localStorage.getItem('email');
     const storedPassword = localStorage.getItem('password');
 
@@ -111,9 +110,9 @@ export default function SignIn() {
     event.preventDefault();
 
     try {
-      const isAuthenticated = await authUser(email, password);
+      const auth = await authUser(email, password);
 
-      if (isAuthenticated) {
+      if (auth) {
         // Сохраняем данные пользователя, если "Remember Me" отмечено
         if (rememberMe) {
           localStorage.setItem('email', email);
@@ -125,7 +124,7 @@ export default function SignIn() {
         }
         login();
         // В случае успешной аутентификации, перенаправьте пользователя
-        navigate('/'); // Замените '/AdminPanel' на нужный URL
+        navigate('/'); // Замените на нужный URL
 
       } else {
         // Обработайте ошибку, например, выведите сообщение об ошибке на странице
@@ -216,7 +215,7 @@ export default function SignIn() {
           </Box>
         </Box>
         <Typography sx={{
-            marginTop: 5,
+            marginTop: 4,
             textAlign: "center",
             fontFamily: 'monospace',
             opacity: 0.8

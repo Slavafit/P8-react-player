@@ -2,47 +2,52 @@ import React, { useState, useEffect} from "react";
 import {
   Button,
   IconButton,
-  List,
   ListItem as MuiListItem,
   ListItemText,
+  Typography,
+  Container,
+  Box,
+  Link,
 } from "@mui/material";
 import axios from "axios";
 import { addTokenToHeaders } from "../Service/authUser";
-import CssBaseline from "@mui/material/CssBaseline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import AddPlaylistModal from "./Modales/PostList";
 import DeletePlaylistModal from "./Modales/DeleteList";
 import EditListModal from "./Modales/EditList";
+import DelSongPlaylist from "./Modales/DelSongPlaylist";
 import Swal from 'sweetalert2';
-// import AddSongToPlaylist from "./Modales/AddSongToPlaylist"
 
-    
-const Listitem = ({ userName, createPlaylist, deletePlaylist, updatePlaylist }) => {
-  const [lists, setLists] = useState([]);
+   
+const Listitem = ({ createPlaylist, deletePlaylist, onListSelect, getPlaylists }) => {
+  const [playlists, setPlaylists] = useState([]);
   const [isAddOpen, setAddOpen] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selDelList, setselDelList] = useState(null);
-
-
+  const [openDeleteSong, setOpenDeleteSong] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+  let userId = localStorage.getItem("userId");
+  
   //отображение листов GET
   useEffect(() => {
-      fetchLists();
+    fetchPlaylists();
   }, []);
 
-    const fetchLists = async () => {
+    const fetchPlaylists  = async () => {
         try {
         addTokenToHeaders();
         const response = await axios.get(
-            `http://localhost:5000/playlist/?userName=${userName}`
+            `http://localhost:5000/songslist/?_id=${userId}`
         );
-        // console.log(response);
-        setLists(Array.isArray(response.data) ? response.data : []);
+        const fetchedPlaylists = response.data.playlists;
+        setPlaylists(fetchedPlaylists);
+        getPlaylists(fetchedPlaylists); //передаю листы в Personal
         } catch (error) {
-        console.error("Error fetching lists:", error);
+        console.error("Error fetching playlists:", error);
         }
     };
 
@@ -50,11 +55,13 @@ const Listitem = ({ userName, createPlaylist, deletePlaylist, updatePlaylist }) 
     const handleAddPlaylist = async (playlistName) => {
       try {
         addTokenToHeaders();
-        const response = await axios.post(`http://localhost:5000/playlist/?userName=${userName}`, {
+        const response = await axios.post(`http://localhost:5000/playlist/?_id=${userId}`, {
           listName: playlistName
         });
-        fetchLists();
-        console.log('Playlist created:', response.data);
+        setTimeout(() => {
+          fetchPlaylists();
+          }, 2000);
+        console.log('Playlist created:', response.data.message);
       } catch (error) {
         if (error.response) {
           const errorMessage = error.response.data.message;
@@ -67,49 +74,88 @@ const Listitem = ({ userName, createPlaylist, deletePlaylist, updatePlaylist }) 
     };
     
     
-    //открытие мод. окна PUT
+    //список открытие мод. окна PUT
   const handleEditClick = (playlist) => {
     setSelectedPlaylist(playlist);
     setOpenEditModal(true);
   };
 
-  //метод PUT
+  //лист метод PUT
   const handleEditPlaylist = async (listname) => {
     try {
+
       addTokenToHeaders();
       await axios.put(
         `http://localhost:5000/playlist/?_id=${selectedPlaylist._id}`, {
           listName: listname
       });      
-      fetchLists();
+      fetchPlaylists();
       setOpenEditModal(false);
     } catch (error) {
       console.error("Error updating playlist:", error);
     }
   };
 
-  //модальное окно DELETE
+  //лист открытие модальное окно DELETE
   const handleOpenDeleteModal = (playlist) => {
     setselDelList(playlist);
     setOpenDeleteModal(true);
   };
 
-  //метод DELETE
+  //лист метод DELETE
   const handleDeletePlaylist = async (selectedPlaylist) => {
     try {
       addTokenToHeaders();
-      await axios.delete(`http://localhost:5000/playlist/?_id=${selectedPlaylist._id}`);
+      // console.log(selectedPlaylist);
+      const response = await axios.delete(
+        `http://localhost:5000/playlist/?_id=${selectedPlaylist._id}`);
       setOpenDeleteModal(false);
-      fetchLists();
+      fetchPlaylists();
+      
+      console.log('Playlist deleted:', response.data);
     } catch (error) {
       console.error("Error delete user:", error);
     }
   };
 
+  //трэк удаление
+  const handleOpenDeleteSong = (playlist, song) => {
+    const dataToDelete = {
+      playlist: playlist,
+      song: song,
+    };
+    setSelectedSong(dataToDelete);
+    setOpenDeleteSong(true);
+  };
+
+  const handleCloseDeleteSong = () => {
+    setOpenDeleteSong(false);
+    setSelectedSong(null);
+  };
+
+  const handleDeleteSong = async (dataToDelete) => {
+    try {
+      addTokenToHeaders();
+      const playlist = dataToDelete.playlist;
+      const song = dataToDelete.song;
+      const response = await axios.delete(
+        `http://localhost:5000/songslist/?playlistId=${playlist._id}&songId=${song._id}`);
+      handleCloseDeleteSong();
+      setTimeout(() => {
+        fetchPlaylists();
+        }, 2000);
+      console.log(response.data.message);
+      showAlert(response.data.message)
+    } catch (error) {
+      console.error("Error delete song form playlist:", error);
+    }
+    
+  };
+
+
   function showAlert(errorMessage) {
     Swal.fire(
       `${errorMessage}`,
-      'Error creating playlist',
       'warning'
     )
   }
@@ -117,29 +163,49 @@ const Listitem = ({ userName, createPlaylist, deletePlaylist, updatePlaylist }) 
   
   return (
     <>
-    <CssBaseline />
     <Button
-        variant="contained"
-        color="primary"
+        variant="outlined"
+        color="secondary"
         startIcon={<AddIcon />}
         onClick={() => setAddOpen(true)}
       >
         Create Playlist
       </Button>
-      <List>
-        {lists.map((playlist) => (
-          <MuiListItem key={playlist._id}>
-            <ListItemText primary={playlist.listName}/>
-            <IconButton onClick={() => handleEditClick(playlist)}>
+      {playlists.map((playlist) => (
+      <MuiListItem key={playlist._id} >
+        <Box display="flex" flexDirection="column" >
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Link component="button"  underline="none">
+            <Typography variant="h6" component="h1"
+                // обработчик клика и передача playlist
+                onClick={() => {
+                  if (playlist.songs.length > 0) {  //проверка на наличие песен в списке
+                    onListSelect(playlist.songs);
+                  }
+                }}>
+              {playlist.listName}
+            </Typography>
+            </Link>
+            <IconButton sx={{ ml: 6 }} onClick={() => handleEditClick(playlist)}>
               <EditIcon />
             </IconButton>
             <IconButton onClick={() => handleOpenDeleteModal(playlist)}>
               <DeleteIcon />
             </IconButton>
-          </MuiListItem>
-        ))}
-      </List>
-      
+          </Box>
+          <Box display="flex" flexDirection="column">
+            {playlist.songs.map((song) => (
+              <Box key={song._id} display="flex" flexDirection="row" alignItems="center">
+                <ListItemText primary={song.artist} secondary={song.track} />
+                <IconButton size="small" onClick={() => handleOpenDeleteSong(playlist, song)}>
+                  <DeleteIcon fontSize="inherit"/>
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </MuiListItem>
+      ))}
       <AddPlaylistModal
         open={isAddOpen}
         close={() => setAddOpen(false)}
@@ -149,7 +215,6 @@ const Listitem = ({ userName, createPlaylist, deletePlaylist, updatePlaylist }) 
         editOpen={openEditModal}
         editClose={() => setOpenEditModal(false)}
         onSubmit={handleEditPlaylist}
-        // updatePlaylist={handleUpdatePlaylist}
         initialListname={selectedPlaylist ? selectedPlaylist.listName : ''}
       />
       <DeletePlaylistModal
@@ -158,9 +223,11 @@ const Listitem = ({ userName, createPlaylist, deletePlaylist, updatePlaylist }) 
       onDelete={() => handleDeletePlaylist(selDelList)}
       playlistName={selDelList ? selDelList.listName : ''}
       />
-      {/* <AddSongToPlaylist
-      lists={lists}
-      /> */}
+      <DelSongPlaylist
+      open={openDeleteSong}
+      onClose={handleCloseDeleteSong}
+      onDelete={() => handleDeleteSong(selectedSong)}
+      />
     </>
   );
 };

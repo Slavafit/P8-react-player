@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { styled, useTheme, useMediaQuery } from "@mui/material";
 import {
-  Avatar, Box, Button, Container, Grid, Typography,
+  Avatar, Box, Container, Grid, Typography, IconButton,
 } from "@mui/material";;
 // import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -11,13 +11,15 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { addTokenToHeaders } from "../../Service/authUser";
 import EditUserProfile from "../Modales/EditUserProfile";
 import DeleteUserModal from "../Modales/DeleteUserModal";
 import { useAuth } from "../../Service/AuthContext";
 import Listitem from "../listItem";
 import Swal from 'sweetalert2';
+import Player from "../../components/Player/Player";
+
 
 const WallPaper = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -69,6 +71,7 @@ const Widget = styled("div")(({ theme }) => ({
   backgroundColor:
     theme.palette.mode === "dark" ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.4)",
   backdropFilter: "blur(40px)",
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
 }));
 
 const ProfilePage = () => {
@@ -81,7 +84,10 @@ const ProfilePage = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  
+  const [lists, setLists] = useState([]); //принимаем и храним список для Player
+  const [selectedList, setSelectedList] = useState(null); //принимаем и храним список для проигрывания
+
+  // console.log("personal: ", selectedList);
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -94,6 +100,7 @@ const ProfilePage = () => {
         `http://localhost:5000/personal/?username=${username}`
       );
       setUsers(response.data.user);
+      // console.log(response.data.user);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -101,7 +108,22 @@ const ProfilePage = () => {
     }
   };
   
+  
+    //блок удаления пользователя
+    const handleDeleteUser = async () => {
+      try {
+        const id = users._id
+        addTokenToHeaders();
+        await axios.delete(`http://localhost:5000/users/?_id=${id}`);
+        setDeleteOpen(false);
+        logout();
+        navigate('/');
+      } catch (error) {
+        console.error("Error delete user:", error);
+      }
+    };
 
+  
     //метод редактирования
     const handleEditUser = async (newUsername, newEmail) => {
       try {
@@ -127,21 +149,15 @@ const ProfilePage = () => {
         console.error("Error updating user:", error);
       }
     };
-
-
-    //блок удаления пользователя
-    const handleDeleteUser = async () => {
-      try {
-        const id = users._id
-        addTokenToHeaders();
-        await axios.delete(`http://localhost:5000/users/?_id=${id}`);
-        setDeleteOpen(false);
-        logout();
-        navigate('/');
-      } catch (error) {
-        console.error("Error delete user:", error);
-      }
-    };
+    
+    // Функция для установки новых плейлистов
+  const getPlaylists = (newPlaylists) => {
+    setLists(newPlaylists);
+  };
+    // Функция обновления плейлистов
+  const upPlaylists = (newPlaylists) => {
+    setLists(newPlaylists);
+  };
 
     function showAlert(username, email) {
       Swal.fire(
@@ -168,7 +184,7 @@ const ProfilePage = () => {
       <Container>
         <CssBaseline />
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={2}>
             <Widget>
               <Box
                 sx={{
@@ -193,42 +209,42 @@ const ProfilePage = () => {
                 <Typography variant="subtitle1" component="p">
                   {users.email}
                 </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: isSmallScreen ? "column" : "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    sx={{ margin: 2 }}
-                    onClick={() => setOpen(true)}
-                    endIcon={<EditRoundedIcon />}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{ margin: 2 }}
-                    endIcon={<DeleteForeverRoundedIcon />}
-                    onClick={() => setDeleteOpen(true)}
-                  >
-                    Delete
-                  </Button>
+                <Box>
+                  <IconButton onClick={() => setOpen(true)}>
+                    <EditRoundedIcon />
+                  </IconButton>
+                  <IconButton onClick={() => setDeleteOpen(true)}>
+                    <DeleteIcon />
+                  </IconButton>
                 </Box>
               </Box>
             </Widget>
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+              <Player
+                playlists={lists}
+                selectedList={selectedList}
+                />
+            </Box>
+          </Grid>
           {/* Блок с песнями */}
-          <Grid item xs={12} sm={9}>
+          <Grid item xs={12} sm={4}>
             <Widget>
               <Listitem
-                userName={username}
+                getPlaylists={getPlaylists} // передаем функцию получения листов
+                upPlaylists={upPlaylists} // передаем функцию обновления листов
+                onListSelect={setSelectedList}  //принимаем список листов
                 />
             </Widget>
           </Grid>
+
         </Grid>
         <EditUserProfile
         editOpen={editOpen}

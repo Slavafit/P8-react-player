@@ -2,31 +2,32 @@ import { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [auth, setAuth] = useState(false);
 
     // восстановить состояние аутентификации из sessionStorage
     useEffect(() => {
-      const storedAuth = sessionStorage.getItem("isAuthenticated");
+      const storedAuth = sessionStorage.getItem("auth");
       if (storedAuth) {
-        setIsAuthenticated(storedAuth === "true");
+        setAuth(storedAuth === "true");
       }
     }, []);
 
   const login = () => {
-    setIsAuthenticated(true);
+    setAuth(true);
     sessionStorage.setItem("sessionStorage", "true");
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
     sessionStorage.removeItem('sessionStorage');
-    setIsAuthenticated(false);
+    setAuth(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ auth, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

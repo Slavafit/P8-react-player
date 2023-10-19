@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Link,
 } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -15,11 +16,9 @@ import { addTokenToHeaders } from "../../Service/authUser";
 import axios from "axios";
 
 
-function AddSongToPlaylist({ open, onClose, selectedSong }) {
-    const [lists, setLists] = useState([]);
+function AddSongToPlaylist({ playlists, open, onClose, selectedSong }) {
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
     const [serverResponse, setServerResponse] = useState("");
-    let userName = localStorage.getItem("username");
 
     const TinyText = styled(Typography)({
         fontSize: '0.8rem',
@@ -31,24 +30,7 @@ function AddSongToPlaylist({ open, onClose, selectedSong }) {
         display: 'flex',
         color: 'red'
       });
-  
 
-  //отображение листов GET
-  useEffect(() => {
-        fetchLists();
-    }, []);
-
-  const fetchLists = async () => {
-      try {
-      addTokenToHeaders();
-      const response = await axios.get(
-          `http://localhost:5000/playlist/?userName=${userName}`
-      );
-      setLists(Array.isArray(response.data) ? response.data : []);
-      } catch (error) {
-      console.error("Error fetching lists:", error);
-      }
-  };
 
   // Обработчик выбора плейлиста
   const handlePlaylistSelect = (playlist) => {
@@ -63,12 +45,12 @@ function AddSongToPlaylist({ open, onClose, selectedSong }) {
         const response = await axios.post(`http://localhost:5000/songtolist/?playlistId=${selectedPlaylist._id}`, {
             songId: selectedSong._id
         });
-        console.log(response.data.message);
+        // console.log(response.data.message);
         setServerResponse(response.data.message);
         setTimeout(() => {
         setServerResponse("");
         onClose();
-        }, 2000);
+        }, 1000);
       } catch (error) {
         console.error("Error adding song to the playlist", error);
         console.log(error.response.data.message);
@@ -90,21 +72,20 @@ function AddSongToPlaylist({ open, onClose, selectedSong }) {
     <DialogTitle>Add Song to Playlist</DialogTitle>
     <DialogContent>
     <TinyText>{serverResponse}</TinyText>
-        {lists.length > 0 ? ( // Проверка, есть ли плейлисты
       <List>
-        {lists.map((playlist) => (
+        {playlists && playlists.map((playlist) => (
           <ListItem
-            key={playlist._id} // id из объекта списка
+            key={playlist._id}
             onClick={() => handlePlaylistSelect(playlist)}
             selected={selectedPlaylist === playlist}
           >
-            <ListItemText primary={playlist.listName}/>
+            <Link component="button"  underline="none" color="success" >
+              <ListItemText primary={playlist.listName} />
+            </Link>
           </ListItem>
         ))}
       </List>
-        ) : (
-        <p>No playlists available.</p>
-    )}
+
     </DialogContent>
     <DialogActions>
       <Button onClick={handleCancel} color="primary">

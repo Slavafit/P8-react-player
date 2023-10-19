@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useCallback } from "react";
-import { ThemeProvider as MuiThemeProvider, createTheme, useMediaQuery } from "@mui/material";
+import { ThemeProvider as MuiThemeProvider, createTheme } from "@mui/material";
 
 const ThemeContext = createContext();
 
@@ -36,4 +36,23 @@ export const useTheme = () => {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
+};
+
+
+export const PlaylistContainer = ({ children }) => {
+  const [playlists2, setPlaylists] = useState([]); // Инициализируйте список плейлистов
+
+  // Функция для установки новых плейлистов
+  const updatePlaylists = (newPlaylists) => {
+    setPlaylists(newPlaylists);
+  };
+
+  return (
+    // Рендерите детей (другие компоненты) и передавайте им данные и функции через пропсы
+    <div>
+      {React.Children.map(children, (child) => {
+        return React.cloneElement(child, { playlists2, updatePlaylists });
+      })}
+    </div>
+  );
 };
