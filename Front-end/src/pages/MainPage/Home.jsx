@@ -10,7 +10,7 @@ import Search from "../../components/Search";
 const Widget = styled("div")(({ theme }) => ({
     padding: 16,
     borderRadius: 15,
-    // width: 400,
+    width: "100%",
     maxWidth: "100%",
     margin: "auto",
     position: "relative",
@@ -46,20 +46,21 @@ const Home = () => {
       setSelectedList([song]);
     };
         // Функция передачи песни из Search в listitem  
-    const addToPlaylist = (song) => {
-      // console.log(song);
-      setAddToPlaylist([song]);
-    };
+    // const addToPlaylist = (song) => {
+    //   // console.log(song);
+    //   setAddToPlaylist([song]);
+    // };
+
+    
 
   return (
-    // <Container theme={theme} component="main" maxWidth="lg">
-    <Container>
-        <Grid container spacing={1}>
+    <Container theme={theme} component="main" maxWidth="lg">
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
             <Widget>
               <Search
                 handleAddToPlay={handleAddToPlay}
-                addToPlaylist={addToPlaylist}
+                // addToPlaylist={addToPlaylist}
               />
             </Widget>
             </Grid>

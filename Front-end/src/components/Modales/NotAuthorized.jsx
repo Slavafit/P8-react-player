@@ -4,10 +4,10 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 const NotAuthorizedModal = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Not Authorized</DialogTitle>
+      <DialogTitle>Not Authorized!</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To add songs to your playlist, you need to be logged in. Please log in or sign up.
+          To add songs to your playlist, you need to be logged in. <br />Please log in or sign up.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

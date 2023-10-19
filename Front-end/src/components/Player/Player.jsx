@@ -34,7 +34,7 @@ import axios from "axios";
 
 
 const WallPaper = styled('div')(({ theme }) => ({
-  position: 'absolute',
+  position: 'fixed',
   width: '100%',
   height: '100%',
   top: 0,
@@ -72,7 +72,7 @@ const WallPaper = styled('div')(({ theme }) => ({
 const Widget = styled('div')(({ theme }) => ({
   padding: 15,
   borderRadius: 15,
-  width: 350,
+  width: 400,
   maxWidth: '100%',
   margin: 'auto',
   position: 'relative',

@@ -5,11 +5,11 @@ import {
   ListItem as MuiListItem,
   ListItemText,
   Typography,
-  Container,
   Box,
   Link,
 } from "@mui/material";
 import axios from "axios";
+import { styled } from "@mui/material/styles";
 import { addTokenToHeaders } from "../Service/authUser";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,8 +20,15 @@ import EditListModal from "./Modales/EditList";
 import DelSongPlaylist from "./Modales/DelSongPlaylist";
 import Swal from 'sweetalert2';
 
+const TinyText = styled(Typography)(({ theme }) => ({
+  fontSize: "1.5rem",
+  opacity: 0.8,
+  fontFamily: "monospace",
+  color: theme.palette.mode === "light" ? "red" : "white",
+}));
+
    
-const Listitem = ({ createPlaylist, deletePlaylist, onListSelect, getPlaylists }) => {
+const Listitem = ({ onListSelect, getPlaylists }) => {
   const [playlists, setPlaylists] = useState([]);
   const [isAddOpen, setAddOpen] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -183,7 +190,7 @@ const Listitem = ({ createPlaylist, deletePlaylist, onListSelect, getPlaylists }
                     onListSelect(playlist.songs);
                   }
                 }}>
-              {playlist.listName}
+              <TinyText>{playlist.listName}</TinyText>
             </Typography>
             </Link>
             <IconButton sx={{ ml: 6 }} onClick={() => handleEditClick(playlist)}>

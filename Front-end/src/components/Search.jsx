@@ -23,7 +23,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   //   // vertical padding + font size from searchIcon
   //   paddingLeft: `calc(1em + ${theme.spacing(4)})`,
   //   transition: theme.transitions.create('width'),
-  //   width: '100%',
+    width: '100%',
   //   [theme.breakpoints.up('sm')]: {
   //     width: '12ch',
   //     '&:focus': {
@@ -33,17 +33,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   // },
 }));
 
-const TinyText = styled(Typography)({
-  fontSize: "0.8rem",
-  opacity: 0.7,
-  fontWeight: 500,
-  letterSpacing: 0.2,
-  marginTop: 4,
-  fontFamily: "monospace",
-  display: "flex",
-  color: "red",
-  alignItems: "center",
-});
+const TinyText = styled(Typography)(({ theme }) => ({
+    fontSize: "0.8rem",
+    opacity: 0.7,
+    fontWeight: 500,
+    letterSpacing: 0.2,
+    marginTop: 4,
+    fontFamily: "monospace",
+    display: "flex",
+    color: theme.palette.mode === "light" ? "red" : "white", // Выбор цвета в зависимости от темы
+    alignItems: "center",
+  }));
 
 const SearchComponent = ({ handleAddToPlay, addToPlaylist }) => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -16,9 +16,10 @@ import { addTokenToHeaders } from "../../Service/authUser";
 import axios from "axios";
 
 
-function AddSongToPlaylist({ playlists, open, onClose, selectedSong }) {
+function AddSongToPlaylist({ playlists, open, onClose, selectedSong, fetchPlaylists }) {
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
     const [serverResponse, setServerResponse] = useState("");
+    // console.log(fetchPlaylists);
 
     const TinyText = styled(Typography)({
         fontSize: '0.8rem',
@@ -49,6 +50,7 @@ function AddSongToPlaylist({ playlists, open, onClose, selectedSong }) {
         setServerResponse(response.data.message);
         setTimeout(() => {
         setServerResponse("");
+        fetchPlaylists();
         onClose();
         }, 1000);
       } catch (error) {
