@@ -1,66 +1,42 @@
-import React from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 
-const EditModal = ({ show, onHide, onSubmit, selectedList, setSelectedList }) => {
+const EditModal = ({ editOpen, editClose, onSubmit, initialListname }) => {
+  const [listname, setListName] = useState(initialListname);
+
+    // Обработчик изменения значения playlist
+    const handleChange = (event) => {
+      setListName(event.target.value);
+    };
+
+    useEffect(() => {
+      // Обновить listname, когда initialListname изменяется
+      setListName(initialListname);
+    }, [initialListname]);
+
   return (
-    <Modal show={show} onHide={onHide}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modificar</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formBasicName">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                value={selectedList ? selectedList.title : ""}
-                onChange={(e) =>
-                  setSelectedList({
-                    ...selectedList,
-                    title: e.target.value,
-                  })
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Desc</Form.Label>
-              <Form.Control
-                type="text"
-                value={selectedList ? selectedList.desc : ""}
-                onChange={(e) =>
-                  setSelectedList({
-                    ...selectedList,
-                    desc: e.target.value,
-                  })
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Cover</Form.Label>
-              <Form.Control
-                type="text"
-                value={selectedList ? selectedList.cover : ""}
-                onChange={(e) =>
-                  setSelectedList({
-                    ...selectedList,
-                    cover: e.target.value,
-                  })
-                }
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={onSubmit}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <Dialog open={editOpen} onClose={editClose}>
+      <DialogTitle>Edit playlist</DialogTitle>
+      <DialogContent>
+        <DialogContentText>Enter the new name:</DialogContentText>
+        <TextField
+        sx={{ margin: 1 }}
+        label="List name" 
+        fullWidth
+        value={listname}
+        onChange={handleChange}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={editClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={() => onSubmit(listname)} color="primary">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
-
-    export default EditModal;
+export default EditModal;

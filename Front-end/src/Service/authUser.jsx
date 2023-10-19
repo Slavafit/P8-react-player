@@ -16,24 +16,30 @@ const authUser = async (email, password) => {
         email,
         password,
       });
-      // Получить JWT-токен из ответа сервера
+      // Получить JWT-токен и прочее из ответа сервера
       const token = response.data.token;
-      // Сохранить токен в localStorage или в памяти приложения
-      localStorage.setItem('token', token);
+      const userId = response.data.userData.userId;
+      const username = response.data.userData.username;
+      const role = response.data.userData.role;
+      // Сохранить токен и остальное в localStorage или в памяти приложения
+      localStorage.setItem('token', token)
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('username', username);
+      localStorage.setItem('role', role);
       // Вернуть успех
       return true;
     }
   } catch (error) {
     // Вернуть ошибку аутентификации
-    const responde = error.response.data.message
-    console.log("Error authUser", responde);
-    showAlert(responde);
+    const response = error.response.data.message
+    console.log("Error authUser", response);
+    showAlert(response);
     return false;
   }
 
-  function showAlert(responde) {
+  function showAlert(response) {
     Swal.fire(
-      `${responde}`,
+      `${response}`,
       'Please, repeat your input',
       'warning'
     )

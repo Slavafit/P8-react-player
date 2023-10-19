@@ -14,7 +14,8 @@ app.use("/", authRouter);
 
 const start = async () => {
     try {
-        await mongoose.connect(`mongodb+srv://qwerty:qwerty123@cluster0.jstgcwd.mongodb.net/auth?retryWrites=true&w=majority`);
+        // await mongoose.connect(`mongodb+srv://qwerty:qwerty123@cluster0.jstgcwd.mongodb.net/auth?retryWrites=true&w=majority`);
+        await mongoose.connect(`mongodb+srv://qwerty:qwerty123@cluster0.jstgcwd.mongodb.net/p8-back-end?retryWrites=true&w=majority`);
         app.listen(PORT, () => console.log(`server started on port ${PORT}`));
     } catch (e) {
         console.log(e);

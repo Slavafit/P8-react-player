@@ -5,10 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
-main
   },
   "keywords": [],
-  "author": "",
+  "author": "SlavaFit",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

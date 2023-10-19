@@ -20,13 +20,13 @@ import ListItemText from '@mui/material/ListItemText';
 import HouseOutlinedIcon from '@mui/icons-material/HouseOutlined';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-;
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 
 import AvatarMenu  from "./AvatarMenu";
 import logo from "../assets/images/logo.png";
 import SignInButton from './SignInButton';
 import { useAuth } from "../Service/AuthContext";
-
+import SwitchTheme from "./switch";
 
 const drawerWidth = 200;
 
@@ -78,19 +78,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function SideMenu() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);   
-  const { isAuthenticated } = useAuth();
+  const { auth } = useAuth();
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <>
+   <Box sx={{ flexGrow: 1 }} >
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar sx={{ ml: 5 }}>
@@ -101,17 +95,21 @@ export default function SideMenu() {
             Cloud music
             </Link>
           </Typography>
+          <SwitchTheme/>
+
           <div style={{ marginRight: '10px' }}>
-            {isAuthenticated && <AvatarMenu />}
+            {auth && <AvatarMenu />}
           </div>
           <div style={{ marginRight: '10px' }}>
-            <SignInButton />
+            <SignInButton
+            auth={auth}
+             />
           </div>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="end"
-            onClick={handleDrawerOpen}
+            onClick={() => setOpen(true)}
             sx={{ ...(open && { display: 'none' }) }}
             >
             <MenuIcon />
@@ -134,27 +132,16 @@ export default function SideMenu() {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={() => setOpen(false)}>
             {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
-        {/* <List>
-          {['Inbox', 'Starred'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <HouseOutlinedIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
+      
         <List>
           {[
             { text: 'Home', link: '/' },
-            { text: 'Collection', link: '/starred' },
+            { text: 'Collection', link: '/personal' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton component={Link} to={item.link}>
@@ -169,13 +156,13 @@ export default function SideMenu() {
         <Divider />
         <List>
           {[
-            { text: 'Home', link: '/' },
-            { text: 'About us', link: '/Contactos' },
+            { text: 'Sign In', link: '/signin' },
+            { text: 'About us', link: '/contactos' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton component={Link} to={item.link}>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <HouseOutlinedIcon /> : <HelpOutlineOutlinedIcon />}
+                  {index % 2 === 0 ? <LoginRoundedIcon /> : <HelpOutlineOutlinedIcon />}
                 </ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
@@ -184,5 +171,6 @@ export default function SideMenu() {
         </List>
       </Drawer>
     </Box>
+    </>
   );
 }

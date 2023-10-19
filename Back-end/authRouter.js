@@ -13,18 +13,31 @@ router.post('/registration', [
      .isLength({min:4, max:10}, )
      ], controller.registration) //вызываем функцию из контроллера authController
 router.post('/login', controller.login)
-
-router.get('/users', roleMiddleware(['ADMIN']), controller.getUsers)
-// router.get('/songs', controller.getSongsById)
-router.get('/songs', controller.getSongs)
 router.post('/songs',  [
      check('artist', "cannot be empty").notEmpty(),
 ], roleMiddleware(['ADMIN']), controller.postSong)
-router.put('/songs', roleMiddleware(['ADMIN']), controller.updateSongs)
-router.put('/users', roleMiddleware(['ADMIN']), controller.updateUser)
 
+router.post('/playlist', authMiddleware, controller.postPlaylist)
+router.post('/songtolist', controller.postSongToList)
+
+router.get('/users', roleMiddleware(['ADMIN']), controller.getUsers)
+router.get('/dashboard', roleMiddleware(['ADMIN']), controller.getUsers)
+router.get('/personal', authMiddleware, controller.getUserByUsername)
+router.get('/songs', controller.getSongs)
+router.get('/song', controller.getSong)
+// router.get('/playlist', authMiddleware, controller.getPlaylistById)
+// router.get('/playlist', authMiddleware, controller.getPlaylist)
+router.get('/songslist', authMiddleware, controller.getListWithSongs)
+
+router.put('/songs', roleMiddleware(['ADMIN']), controller.updateSongs)
+router.put('/users', roleMiddleware(['ADMIN','USER']), controller.updateUser)
+router.put('/playlist', authMiddleware, controller.updatePlaylist)
+
+router.delete('/users', roleMiddleware(['ADMIN','USER']), controller.deleteUser)
 router.delete('/songs', roleMiddleware(['ADMIN']), controller.deleteSongs)
-router.delete('/users', roleMiddleware(['ADMIN']), controller.deleteUser)
+router.delete('/playlist', authMiddleware, controller.deletePlaylist)
+router.delete('/songslist', authMiddleware, controller.deleteSongFromList)
+
 
 
 
