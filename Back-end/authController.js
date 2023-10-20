@@ -181,7 +181,7 @@ class authController {
     async postSong(req, res) {
         try {
             const { artist, track, year, fileUrl, coverUrl, category} = req.body;
-            const candidate = await Song.findOne({ $or: [{ artist }, { track }] })    //ищем данные в БД
+            const candidate = await Song.findOne({ $and: [{ artist }, { track }] })    //ищем данные в БД
             if (candidate) {        //если нашли вернули сообщение
                 return res.status(400).json({message: "Such an artist with such a track already exists"})
             }
@@ -203,19 +203,28 @@ class authController {
             res.status(500).json({message: 'getSongs error'})
         }
     }
+
     async getSong(req, res) {
         try {
-            const { search } = req.query;
-            if (!search) {
+            const { search, category  } = req.query;
+            if (!search && !category) {
                 return res.status(400).json({ message: 'Search query is required' });
             }
-            // console.log("Received Search request with: ",search);
+            // console.log("Received Search request with: ",search, category);
+            // const songs = await Song.find({
+            //     $or: [
+            //         { artist: { $regex: search, $options: 'i' } }, // Поиск по полю artist, игнорируя регистр
+            //         { track: { $regex: search, $options: 'i' } }  // Поиск по полю title, игнорируя регистр
+            //     ]
+            // });
             const songs = await Song.find({
                 $or: [
-                    { artist: { $regex: search, $options: 'i' } }, // Поиск по полю artist, игнорируя регистр
-                    { track: { $regex: search, $options: 'i' } }  // Поиск по полю title, игнорируя регистр
-                ]
-            });
+                  { artist: { $regex: search, $options: 'i' } },
+                  { track: { $regex: search, $options: 'i' } },
+                ],
+                category: category // Поиск по категории
+              });
+              
             //ответ на клиент если не найдено
             if (songs.length === 0) {
                 return res.status(404).json({ message: 'No results found' });

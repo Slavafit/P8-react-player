@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Typography } from "@mui/material";
 import { styled, useTheme } from '@mui/material/styles';
-// import "./Contactos.css";
+import "./Contactos.css";
 
 const WallPaper = styled('div')(({ theme }) => ({
   position: 'fixed',
@@ -39,6 +39,7 @@ const WallPaper = styled('div')(({ theme }) => ({
   },
 }));
 
+
 const Widget = styled('div')(({ theme }) => ({
   padding: 16,
   borderRadius: 15,
@@ -51,7 +52,7 @@ const Widget = styled('div')(({ theme }) => ({
 const Contactos = () => {
   const theme = useTheme();
   return (
-    // <div className="bgjar">
+    <div className="bgjar">
     <Container  theme={theme} >
       <Widget>
       <Typography className="text-center">
@@ -72,9 +73,9 @@ const Contactos = () => {
         </p>
       </Typography>
       </Widget>
-      <WallPaper />
+      {/* <WallPaper /> */}
     </Container>
-    // </div>
+  </div>
   );
 };
 
