@@ -86,7 +86,8 @@ se realizan respuestas del servidor en caso de acciones erróneas del cliente.
 
 
 ## Next Steps 🔜
-aplicación de la contabilidad de los gustos y disgustos. Búsqueda de canciones por categoría. 
+lo que quería hacer más: alojar el código en un servidor en la nube.
+integrar el widget cloudinary en la página de administración. 
 
 ## Author 👨‍💻
 
