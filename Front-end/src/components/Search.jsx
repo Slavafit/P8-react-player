@@ -5,6 +5,8 @@ import {
   ListItem as MuiListItem,
   IconButton,
   Typography,
+  List,
+  ListItem,
 } from "@mui/material";
 import axios from "axios";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,6 +17,8 @@ import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import NotAuthModal from "./Modales/NotAuthorized";
 import { useAuth } from "../Service/AuthContext";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -23,7 +27,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   //   // vertical padding + font size from searchIcon
   //   paddingLeft: `calc(1em + ${theme.spacing(4)})`,
   //   transition: theme.transitions.create('width'),
-    width: '100%',
+  //   width: '100%',
   //   [theme.breakpoints.up('sm')]: {
   //     width: '12ch',
   //     '&:focus': {
@@ -45,18 +49,27 @@ const TinyText = styled(Typography)(({ theme }) => ({
     alignItems: "center",
   }));
 
-const SearchComponent = ({ handleAddToPlay, addToPlaylist }) => {
+const SearchComponent = ({ handleAddToPlay }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [serverResponse, setServerResponse] = useState("");
   const [openNotAuthModal, setOpenNotAuthModal] = useState(false);
-  const { auth } = useAuth();
+  const [selectedCategory, setSelectedCategory] = useState(null);//выбираем из списка категорий
+
+  const category = [
+    { label: 'pop' },
+    { label: 'rock'},
+    { label: 'dance' },
+    { label: 'other' },
+    ];
 
   //   console.log("Search: ", serverResponse);
   const handleSearch = async () => {
     try {
+      let category = selectedCategory.label
+      // console.log(category);
       const response = await axios.get(
-        `http://localhost:5000/song/?search=${searchQuery}`
+        `http://localhost:5000/song/?search=${searchQuery}&category=${category}`
       );
       setSearchResults(response.data);
     } catch (error) {
@@ -92,44 +105,60 @@ const SearchComponent = ({ handleAddToPlay, addToPlaylist }) => {
 
   return (
     <>
-      <Box display="flex" flexDirection="row" alignItems="left">
-        <IconButton size="medium" onClick={handleSearch}>
-          <SearchIcon fontSize="inherit" />
-        </IconButton>
-        <StyledInputBase
-          placeholder="Search…"
-          inputProps={{ "aria-label": "search" }}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyPress}
+      <Box display="flex" flexDirection="column" alignItems="left">
+        <Autocomplete
+            disablePortal
+            options={category}
+            sx={{ mb: 1, px: 1 }}
+            value={selectedCategory}
+            onKeyDown={handleKeyPress}
+            onChange={(event, newValue) => {
+              setSelectedCategory(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} label="Category" />}
+          />
+        <Box display="flex" flexDirection="row" alignItems="left">
+          
+          <IconButton size="medium" onClick={handleSearch}>
+            <SearchIcon fontSize="inherit" />
+          </IconButton>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyPress}
+          />
+          <IconButton size="medium" onClick={() => clearSearchResults()}>
+            <ClearIcon fontSize="inherit" />
+          </IconButton>
+        </Box>
+        <TinyText>{serverResponse}</TinyText>
+        <Box display="flex" flexDirection="row" alignItems="left">
+        <List>
+          {searchResults.map((result, index) => (
+            <ListItem key={index}>
+              <ListItemText primary={result.artist} secondary={result.track} />
+              <IconButton
+                aria-label="Play"
+                title="Play"
+                onClick={() => handleAddToPlay(result)}
+              >
+                <PlayArrowIcon fontSize="medium" />
+              </IconButton>
+              {/* <IconButton aria-label="Song to list" title='Add to list'
+                  onClick={() => handleAddToPlaylist(result)}>
+                  <FavoriteBorderRoundedIcon fontSize="small"/>
+              </IconButton> */}
+            </ListItem>
+          ))}
+        </List>
+        </Box>
+      </Box>
+        <NotAuthModal
+          open={openNotAuthModal}
+          onClose={() => setOpenNotAuthModal(false)}
         />
-        <IconButton size="medium" onClick={() => clearSearchResults()}>
-          <ClearIcon fontSize="inherit" />
-        </IconButton>
-      </Box>
-      <TinyText>{serverResponse}</TinyText>
-      <Box display="flex" flexDirection="row" alignItems="left">
-        {searchResults.map((result, index) => (
-          <MuiListItem key={index}>
-            <ListItemText primary={result.artist} secondary={result.track} />
-            <IconButton
-              aria-label="Play"
-              title="Play"
-              onClick={() => handleAddToPlay(result)}
-            >
-              <PlayArrowIcon fontSize="medium" />
-            </IconButton>
-            {/* <IconButton aria-label="Song to list" title='Add to list'
-                    onClick={() => handleAddToPlaylist(result)}>
-                <FavoriteBorderRoundedIcon fontSize="small"/>
-                </IconButton> */}
-          </MuiListItem>
-        ))}
-      </Box>
-      <NotAuthModal
-        open={openNotAuthModal}
-        onClose={() => setOpenNotAuthModal(false)}
-      />
     </>
   );
 };

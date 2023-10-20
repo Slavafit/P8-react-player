@@ -8,6 +8,7 @@ import {
   Box,
   Link,
 } from "@mui/material";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import { styled } from "@mui/material/styles";
 import { addTokenToHeaders } from "../Service/authUser";
@@ -19,6 +20,45 @@ import DeletePlaylistModal from "./Modales/DeleteList";
 import EditListModal from "./Modales/EditList";
 import DelSongPlaylist from "./Modales/DelSongPlaylist";
 import Swal from 'sweetalert2';
+
+
+const defaultTheme = createTheme();
+
+const theme = createTheme({
+  components: {
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: 'dashed' },
+          style: {
+            textTransform: 'none',
+            border: `2px dashed ${defaultTheme.palette.primary.main}`,
+            color: defaultTheme.palette.primary.main,
+          },
+        },
+        {
+          props: { variant: 'dashed', color: 'secondary' },
+          style: {
+            border: `2px dashed ${defaultTheme.palette.secondary.main}`,
+            color: defaultTheme.palette.secondary.main,
+          },
+        },
+        {
+          props: { variant: 'dashed', size: 'large' },
+          style: {
+            borderWidth: 4,
+          },
+        },
+        {
+          props: { variant: 'dashed', color: 'secondary', size: 'large' },
+          style: {
+            fontSize: 18,
+          },
+        },
+      ],
+    },
+  },
+});
 
 const TinyText = styled(Typography)(({ theme }) => ({
   fontSize: "1.5rem",
@@ -162,22 +202,25 @@ const Listitem = ({ onListSelect, getPlaylists }) => {
 
   function showAlert(errorMessage) {
     Swal.fire(
-      `${errorMessage}`,
-      'warning'
+      'warning',
+      `${errorMessage}`
     )
   }
   
   
   return (
     <>
+    <ThemeProvider theme={theme}>
     <Button
-        variant="outlined"
+        // variant="outlined"
+        variant="dashed"
         color="secondary"
         startIcon={<AddIcon />}
         onClick={() => setAddOpen(true)}
       >
         Create Playlist
       </Button>
+      </ThemeProvider>
       {playlists.map((playlist) => (
       <MuiListItem key={playlist._id} >
         <Box display="flex" flexDirection="column" >

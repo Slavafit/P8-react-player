@@ -11,7 +11,6 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/AdminPanel";
 import Personal from "./components/Profile/Personal";
-// import Player from "./components/Player/Player";
 import SideMenu from "./components/SideMenu";
 import { AuthProvider } from "./Service/AuthContext";
 import { ThemeProvider } from "./Service/ThemeProvider";
