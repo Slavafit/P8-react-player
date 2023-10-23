@@ -146,7 +146,7 @@ export default function MusicPlayer({ playlists, selectedList }) {
     const fetchSongs = async ()  => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/songs');
+        const response = await axios.get('https://p8-player-401107.ew.r.appspot.com/songs');
         setSongs(response.data);
         setLoading(false);
       } catch (e) {

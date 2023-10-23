@@ -12,7 +12,7 @@ const authUser = async (email, password) => {
       return true;
       } else {
       // Отправить запрос на сервер с именем пользователя и паролем
-      const response = await axios.post('http://localhost:5000/login', {
+      const response = await axios.post('https://p8-player-401107.ew.r.appspot.com/login', {
         email,
         password,
       });

@@ -81,13 +81,13 @@ const SearchComponent = ({ handleAddToPlay }) => {
     if (!selectedCategory) {
       // Если категория не выбрана, выполнить поиск без категории
       console.log(searchQuery);
-      const response = await axios.get(`http://localhost:5000/song/?search=${searchQuery}`);
+      const response = await axios.get(`https://p8-player-401107.ew.r.appspot.com/song/?search=${searchQuery}`);
       setSearchResults(response.data);
     } else {
       // Иначе выполнить поиск с выбранной категорией
       const category = selectedCategory.label;
       console.log(category);
-      const response = await axios.get(`http://localhost:5000/song/?search=${searchQuery}&category=${category}`);
+      const response = await axios.get(`https://p8-player-401107.ew.r.appspot.com/song/?search=${searchQuery}&category=${category}`);
       setSearchResults(response.data);
     }
   } catch (error) {

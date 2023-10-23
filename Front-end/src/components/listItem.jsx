@@ -88,7 +88,7 @@ const Listitem = ({ onListSelect, getPlaylists }) => {
         try {
         addTokenToHeaders();
         const response = await axios.get(
-            `http://localhost:5000/songslist/?_id=${userId}`
+            `https://p8-player-401107.ew.r.appspot.com/songslist/?_id=${userId}`
         );
         const fetchedPlaylists = response.data.playlists;
         setPlaylists(fetchedPlaylists);
@@ -102,7 +102,7 @@ const Listitem = ({ onListSelect, getPlaylists }) => {
     const handleAddPlaylist = async (playlistName) => {
       try {
         addTokenToHeaders();
-        const response = await axios.post(`http://localhost:5000/playlist/?_id=${userId}`, {
+        const response = await axios.post(`https://p8-player-401107.ew.r.appspot.com/playlist/?_id=${userId}`, {
           listName: playlistName
         });
         setTimeout(() => {
@@ -133,7 +133,7 @@ const Listitem = ({ onListSelect, getPlaylists }) => {
 
       addTokenToHeaders();
       await axios.put(
-        `http://localhost:5000/playlist/?_id=${selectedPlaylist._id}`, {
+        `https://p8-player-401107.ew.r.appspot.com/playlist/?_id=${selectedPlaylist._id}`, {
           listName: listname
       });      
       fetchPlaylists();
@@ -155,7 +155,7 @@ const Listitem = ({ onListSelect, getPlaylists }) => {
       addTokenToHeaders();
       // console.log(selectedPlaylist);
       const response = await axios.delete(
-        `http://localhost:5000/playlist/?_id=${selectedPlaylist._id}`);
+        `https://p8-player-401107.ew.r.appspot.com/playlist/?_id=${selectedPlaylist._id}`);
       setOpenDeleteModal(false);
       fetchPlaylists();
       
@@ -186,7 +186,7 @@ const Listitem = ({ onListSelect, getPlaylists }) => {
       const playlist = dataToDelete.playlist;
       const song = dataToDelete.song;
       const response = await axios.delete(
-        `http://localhost:5000/songslist/?playlistId=${playlist._id}&songId=${song._id}`);
+        `https://p8-player-401107.ew.r.appspot.com/songslist/?playlistId=${playlist._id}&songId=${song._id}`);
       handleCloseDeleteSong();
       setTimeout(() => {
         fetchPlaylists();

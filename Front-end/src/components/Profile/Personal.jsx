@@ -58,7 +58,7 @@ const ProfilePage = () => {
       addTokenToHeaders();
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:5000/personal/?username=${username}`
+        `https://p8-player-401107.ew.r.appspot.com/personal/?username=${username}`
       );
       setUsers(response.data.user);
       // console.log(response.data.user);
@@ -75,7 +75,7 @@ const ProfilePage = () => {
       try {
         const id = users._id
         addTokenToHeaders();
-        await axios.delete(`http://localhost:5000/users/?_id=${id}`);
+        await axios.delete(`https://p8-player-401107.ew.r.appspot.com/users/?_id=${id}`);
         setDeleteOpen(false);
         logout();
         navigate('/');
@@ -96,7 +96,7 @@ const ProfilePage = () => {
         addTokenToHeaders();
         setLoading(true);
         const response = await axios.put(
-          `http://localhost:5000/users/?_id=${id}`, userData );
+          `https://p8-player-401107.ew.r.appspot.com/users/?_id=${id}`, userData );
         
         setUsers(response.data);
         let username = response.data.username;

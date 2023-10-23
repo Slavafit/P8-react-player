@@ -16,9 +16,9 @@ export async function fetchData(url) {
 }
 
 export async function fetchLists() {
-  return fetchData("http://localhost:5000/lists");
+  return fetchData("https://p8-player-401107.ew.r.appspot.com/lists");
 }
 
 export async function fetchSongs() {
-  return fetchData("http://localhost:5000/songs");
+  return fetchData("https://p8-player-401107.ew.r.appspot.com/songs");
 }

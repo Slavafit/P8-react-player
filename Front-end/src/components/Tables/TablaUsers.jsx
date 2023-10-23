@@ -19,7 +19,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       addTokenToHeaders();
-      const response = await axios.get("http://localhost:5000/users");
+      const response = await axios.get("https://p8-player-401107.ew.r.appspot.com/users");
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -39,7 +39,7 @@ const UserManagement = () => {
   const handleSaveUser = async () => {
     try {
       addTokenToHeaders();
-      await axios.put(`http://localhost:5000/users/?_id=${selectedUser._id}`, selectedUser);
+      await axios.put(`https://p8-player-401107.ew.r.appspot.com/users/?_id=${selectedUser._id}`, selectedUser);
       fetchUsers();
       handleCloseEditModal();
     } catch (error) {
@@ -73,7 +73,7 @@ const UserManagement = () => {
     const handleDeleteUser = async (user) => {
       try {
         addTokenToHeaders();
-        await axios.delete(`http://localhost:5000/users/?_id=${user._id}`);
+        await axios.delete(`https://p8-player-401107.ew.r.appspot.com/users/?_id=${user._id}`);
         fetchUsers();
         handleDeleteConfirmationClose();
       } catch (error) {

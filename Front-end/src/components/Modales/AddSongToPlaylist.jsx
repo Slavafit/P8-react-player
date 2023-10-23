@@ -43,7 +43,7 @@ function AddSongToPlaylist({ playlists, open, onClose, selectedSong, fetchPlayli
     if (selectedPlaylist) {
       try {
         addTokenToHeaders();
-        const response = await axios.post(`http://localhost:5000/songtolist/?playlistId=${selectedPlaylist._id}`, {
+        const response = await axios.post(`https://p8-player-401107.ew.r.appspot.com/songtolist/?playlistId=${selectedPlaylist._id}`, {
             songId: selectedSong._id
         });
         // console.log(response.data.message);

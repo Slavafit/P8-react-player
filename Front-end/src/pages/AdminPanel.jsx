@@ -74,7 +74,7 @@ function SongsList() {
       const songIdToEdit = Songdata[editSongIndex]._id; // Assuming each song has an "id" field
       addTokenToHeaders();
       await axios.put(
-        `http://localhost:5000/songs/?_id=${songIdToEdit}`,
+        `https://p8-player-401107.ew.r.appspot.com/songs/?_id=${songIdToEdit}`,
         editedSong
       );
       const updatedSongs = [...Songdata];
@@ -94,7 +94,7 @@ function SongsList() {
   const fetchSongs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/songs");
+      const response = await axios.get("https://p8-player-401107.ew.r.appspot.com/songs");
       setSongdata(response.data);
       setLoading(false);
     } catch (error) {
@@ -134,7 +134,7 @@ function SongsList() {
     try {
         addTokenToHeaders();
         const response = await axios.post(
-        "http://localhost:5000/songs",
+        "https://p8-player-401107.ew.r.appspot.com/songs",
         newSong
       );
       const addedSong = response.data;
@@ -174,7 +174,7 @@ function SongsList() {
     try {
       const songDelete = Songdata[index]._id; // удаления карточки по "id"
       addTokenToHeaders();
-      await axios.delete(`http://localhost:5000/songs/?_id=${songDelete}`);
+      await axios.delete(`https://p8-player-401107.ew.r.appspot.com/songs/?_id=${songDelete}`);
       const updatedSongs = [...Songdata];
       updatedSongs.splice(index, 1);
       setSongdata(updatedSongs);

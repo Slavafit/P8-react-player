@@ -147,7 +147,7 @@ export default function SignUp() {
     if (!hasErrors) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/registration",
+          "https://p8-player-401107.ew.r.appspot.com/registration",
           formData
         );
         let responseMessage = response.data.message;
