@@ -65,18 +65,36 @@ const SearchComponent = ({ handleAddToPlay }) => {
 
   //   console.log("Search: ", serverResponse);
   const handleSearch = async () => {
-    try {
-      let category = selectedCategory.label
-      // console.log(category);
-      const response = await axios.get(
-        `http://localhost:5000/song/?search=${searchQuery}&category=${category}`
-      );
+  //   try {
+  //     let category = selectedCategory.label
+  //     console.log(searchQuery);
+  //     const response = await axios.get(
+  //       `http://localhost:5000/song/?search=${searchQuery}&category=${category}`
+  //     );
+  //     setSearchResults(response.data);
+  //   } catch (error) {
+  //     setServerResponse(error.response.data.message);
+  //     console.error("Error searching:", error);
+  //   }
+  // };
+  try {
+    if (!selectedCategory) {
+      // Если категория не выбрана, выполнить поиск без категории
+      console.log(searchQuery);
+      const response = await axios.get(`http://localhost:5000/song/?search=${searchQuery}`);
       setSearchResults(response.data);
-    } catch (error) {
-      setServerResponse(error.response.data.message);
-      console.error("Error searching:", error);
+    } else {
+      // Иначе выполнить поиск с выбранной категорией
+      const category = selectedCategory.label;
+      console.log(category);
+      const response = await axios.get(`http://localhost:5000/song/?search=${searchQuery}&category=${category}`);
+      setSearchResults(response.data);
     }
-  };
+  } catch (error) {
+    setServerResponse(error.response.data.message);
+    console.error("Error searching:", error);
+  }
+};
 
   const clearSearchResults = () => {
     setSearchResults([]);
