@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRouter = require('./authRouter');
-const PORT = process.env.PORT || 5000;
+const PORT = 8080;
 
 const app = express();
 
@@ -14,7 +14,6 @@ app.use("/", authRouter);
 
 const start = async () => {
     try {
-        // await mongoose.connect(`mongodb+srv://qwerty:qwerty123@cluster0.jstgcwd.mongodb.net/auth?retryWrites=true&w=majority`);
         await mongoose.connect(`mongodb+srv://qwerty:qwerty123@cluster0.jstgcwd.mongodb.net/p8-back-end?retryWrites=true&w=majority`);
         app.listen(PORT, () => console.log(`server started on port ${PORT}`));
     } catch (e) {

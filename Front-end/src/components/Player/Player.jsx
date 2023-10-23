@@ -152,8 +152,13 @@ export default function MusicPlayer({ playlists, selectedList }) {
       } catch (e) {
         console.error("Error fetching data:", e);
       }
-    }
-
+    };
+    
+    useEffect(() => {
+      // Генерируем случайный индекс при загрузке компонента
+      const randomIndex = Math.floor(Math.random() * songs.length);
+      setCurrentTrackIndex(randomIndex);
+    }, [songs]);
     
 
     const handlePreviousTrack = () => {
@@ -284,8 +289,8 @@ export default function MusicPlayer({ playlists, selectedList }) {
 
     return (
     <Container theme={theme} component="main" maxWidth="xs">
-      <Widget>
       <CssBaseline />
+      <Widget>
       {songs[currentTrackIndex] && (
         <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <CoverImage>

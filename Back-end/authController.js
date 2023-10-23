@@ -208,28 +208,39 @@ class authController {
         try {
             const { search, category  } = req.query;
             if (!search && !category) {
-                return res.status(400).json({ message: 'Search query is required' });
+                return res.status(400).json({ message: 'Search query or category is required' });
             }
-            // console.log("Received Search request with: ",search, category);
-            // const songs = await Song.find({
-            //     $or: [
-            //         { artist: { $regex: search, $options: 'i' } }, // Поиск по полю artist, игнорируя регистр
-            //         { track: { $regex: search, $options: 'i' } }  // Поиск по полю title, игнорируя регистр
-            //     ]
-            // });
-            const songs = await Song.find({
-                $or: [
-                  { artist: { $regex: search, $options: 'i' } },
-                  { track: { $regex: search, $options: 'i' } },
-                ],
-                category: category // Поиск по категории
-              });
-              
-            //ответ на клиент если не найдено
+            let query = {};
+            if (search && category) {
+                query = {
+                    $or: [
+                        { artist: { $regex: search, $options: 'i' } },
+                        { track: { $regex: search, $options: 'i' } },
+                    ],
+                    category: category
+                };
+            } else if (search) {
+                query = {
+                    $or: [
+                        { artist: { $regex: search, $options: 'i' } },
+                        { track: { $regex: search, $options: 'i' } },
+                    ]
+                };
+            } else if (category) {
+                query = {
+                    category: category
+                };
+            }
+            
+
+            
+            const songs = await Song.find(query);
+            
             if (songs.length === 0) {
                 return res.status(404).json({ message: 'No results found' });
             }
-            res.json(songs)
+            
+            res.json(songs);
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Search error'})
